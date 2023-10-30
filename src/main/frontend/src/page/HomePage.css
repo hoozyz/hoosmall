@@ -1,0 +1,343 @@
+.page {
+  display: flex;
+  width: 100%;
+  height: 100vh;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+main {
+  width: 100%;
+  height: auto;
+  min-height: calc(100vh - 20rem);
+  position: relative;
+  flex-shrink: 0;
+  background: rgba(166, 127, 120, 0.70);
+}
+
+.footer {
+  width: 100%;
+  height: 10rem;
+  position: relative;
+  display: flex;
+  flex-shrink: 0;
+  background: #32435F;
+  box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+}
+
+/* 홈페이지 메인 */
+
+.mainContainer {
+  flex-wrap: wrap;
+  display: flex;
+  justify-content: space-between;
+  width: 60%;
+  height: 80%;
+  margin: auto;
+  margin-top: 50px;
+}
+
+.list {
+  width: 30%;
+  height: 40%;
+  margin-bottom: 30px;
+  border: 0;
+  background-color: transparent;
+}
+
+.mainImgBox {
+  float: left;
+  width: 40%;
+  height: 90%;
+  margin-left: 30px;
+  margin-top: 35px;
+  background-image: url(http://shopping.phinf.naver.net/main_1031546/10315467179.jpg);
+  background-color: white;
+  background-size: cover;
+}
+
+.mainInfoBox {
+  text-align: left;
+  display: inline-block;
+  margin-left: 30px;
+  margin-top: 15px;
+  width: 45%;
+  height: 90%;
+}
+
+.mainCategory {
+  margin-bottom: 50px;
+  width: 5rem;
+  height: 2rem;
+}
+
+.mainTitle {
+  margin-bottom: 50px;
+  width: 12 rem;
+  height: 3.6875rem;
+}
+
+.mainPrice {
+  width: 9rem;
+  height: 1.7rem;
+}
+
+/* 상세 페이지 메인 */
+
+.detailBox {
+  width: 60rem;
+  height: 80%;
+  margin: auto;
+}
+
+.detailImgBox {
+  float: left;
+  width: 40%;
+  height: 80%;
+  margin-left: 30px;
+  margin-top: 35px;
+  background-image: url(http://shopping.phinf.naver.net/main_1031546/10315467179.jpg);
+  background-color: white;
+  background-size: cover;
+}
+
+.detailInfoBox {
+  text-align: left;
+  display: inline-block;
+  margin-left: 50px;
+  margin-top: 50px;
+  width: 50%;
+  height: 90%;
+}
+
+.detailCoupon {
+  margin-bottom: 100px;
+  width: 12 rem;
+  height: 5rem;
+  border: 0;
+  margin: auto;
+}
+
+.detailCouponBtn {
+  margin: auto;
+  width: 50%;
+  height: 30%;
+}
+
+.dropContent {
+  position: absolute;
+  background-color: #f9f9f9;
+  min-width: 160px;
+  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+  display: flex;
+  flex-direction: column;
+}
+
+.hideContent {
+  display: none;
+  position: absolute;
+  background-color: #f9f9f9;
+  min-width: 160px;
+  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+}
+
+.dropContent button {
+  color: black;
+  text-decoration: none;
+  flex-direction: column
+}
+
+.hideContent button {
+  color: black;
+  text-decoration: none;
+  display: block;
+}
+
+.detailTitle {
+  margin-bottom: 100px;
+  width: 12 rem;
+  height: 5rem;
+}
+
+.detailEvent {
+  margin-bottom: 100px;
+  width: 12 rem;
+  height: 5rem;
+}
+
+.detailPrice {
+  width: 12 rem;
+  height: 5rem;
+}
+
+.payBtn {
+  left: 47%;
+  width: 11rem;
+  height: 3rem;
+  font-size: 25px;
+  font-weight: bold;
+  text-align: right;
+  position:absolute;
+  background: white;
+  background-image: url('./img/Toss_Symbol.png');
+  background-size: 3rem 3rem;
+  background-position: 7%;
+  background-repeat: no-repeat;
+  border: 0;
+}
+
+/* 페이징 */
+
+.pagination {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  margin-left: 760px;
+  margin-top: 30px;
+  gap: 18px;
+  width: 40%;
+  height: 40px;
+}
+
+.pageBtn {
+  width: 40px;
+  height: 40px;
+  color: black;
+  background-color: white;
+  border: 0;
+}
+
+.pageActive {
+  width: 40px;
+  height: 40px;
+  color: white;
+  background-color: black;
+  border: 0;
+}
+
+.lastPage {
+  width: 40px;
+  height: 40px;
+  background-image: url('./img/lastPage.svg');
+  background-size: cover;
+  background-position: center;
+  border: 0;
+}
+
+.nextPage {
+  width: 40px;
+  height: 40px;
+  background-image: url('./img/nextPage.svg');
+  background-size: cover;
+  background-position: center;
+  border: 0;
+}
+
+.prevPage {
+  width: 40px;
+  height: 40px;
+  background-image: url('./img/prevPage.svg');
+  background-size: cover;
+  background-position: center;
+  border: 0;
+}
+
+.firstPage {
+  width: 40px;
+  height: 40px;
+  background-image: url('./img/firstPage.svg');
+  background-size: cover;
+  background-position: center;
+  border: 0;
+}
+
+/* 헤더 */
+
+.header {
+  display: flex;
+  width: 100%;
+  height: 10rem;
+  position: relative;
+  align-items: center;
+  flex-shrink: 0;
+  background: #E1DCD9;
+  box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+}
+
+.headerBtnBox {
+  display: inline-flex;
+  padding: 0.5625rem 0.625rem 0.8125rem 0.75rem;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 3.0625rem;
+  margin: 30px;
+}
+
+.HoosMall {
+  width: 220px;
+  color: #000;
+  margin: auto;
+  margin-right: 760px;
+  text-align: center;
+  text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  font-size: 50px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+  text-decoration-line: underline;
+  border: 0;
+  background-color: transparent;
+}
+
+.register,
+.login,
+.logout,
+.mypage {
+  width: 8.4375rem;
+  height: 3.375rem;
+  flex-shrink: 0;
+  border: 1px solid #DDD;
+  background: #EEE;
+  box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+}
+
+.login {
+  color: #000;
+  text-align: center;
+  font-family: Inter;
+  font-size: 1.75rem;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+}
+
+.register {
+  color: #000;
+  text-align: center;
+  font-family: Inter;
+  font-size: 1.75rem;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+}
+
+.logout {
+  color: #000;
+  text-align: center;
+  font-family: Inter;
+  font-size: 1.75rem;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+}
+
+.mypage {
+  color: #000;
+  text-align: center;
+  font-family: Inter;
+  font-size: 1.75rem;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+}
