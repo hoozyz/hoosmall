@@ -3,6 +3,12 @@ import "./App.css";
 import { Routes, Route, BrowserRouter } from "react-router-dom";
 import HomePage from "./page/HomePage";
 import DetailPage from "./page/DetailPage";
+import RegisterPage from "./page/RegisterPage";
+import LoginPage from "./page/LoginPage";
+import SuccessPage from "./page/SuccessPage";
+import CancelPage from "./page/CancelPage";
+import FailPage from "./page/FailPage";
+import MyPage from "./page/MyPage";
 
 function App() {
   return (
@@ -10,11 +16,12 @@ function App() {
       <Routes>
         <Route path="/" element={<HomePage />}></Route>
         <Route path="/detail" element={<DetailPage />}></Route>
-        <Route path="/register" element={<HomePage />}></Route>
-        <Route path="/login" element={<HomePage />}></Route>
-        <Route path="/pay/success" element={<HomePage />}></Route>
-        <Route path="/pay/successCancel" element={<HomePage />}></Route>
-        <Route path="/pay/fail" element={<HomePage />}></Route>
+        <Route path="/mypage" element={<MyPage />}></Route>
+        <Route path="/register" element={<RegisterPage />}></Route>
+        <Route path="/login" element={<LoginPage />}></Route>
+        <Route path="/pay/success" element={<SuccessPage />}></Route>
+        <Route path="/pay/cancel" element={<CancelPage />}></Route>
+        <Route path="/pay/fail" element={<FailPage />}></Route>
       </Routes>
     </BrowserRouter>
   );

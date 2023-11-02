@@ -178,13 +178,222 @@ main {
   font-size: 25px;
   font-weight: bold;
   text-align: right;
-  position:absolute;
+  position: absolute;
   background: white;
   background-image: url('./img/Toss_Symbol.png');
   background-size: 3rem 3rem;
   background-position: 7%;
   background-repeat: no-repeat;
   border: 0;
+}
+
+/* 작은 페이지 틀 */
+
+.miniPage {
+  display: inline-flex;
+  width: 24.4rem;
+  height: 30rem;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+  background: #FFF;
+}
+
+.miniHeader {
+  display: flex;
+  width: 100%;
+  height: 3.4375rem;
+  margin: auto;
+  align-items: center;
+  gap: 7.8125rem;
+  flex-shrink: 0;
+  background: #FFF;
+}
+
+.miniHeaderVector {
+  width: 2rem;
+  height: 2rem;
+  flex-shrink: 0;
+  background-image: url('./img/miniPage.svg');
+  background-size: cover;
+  background-color: white;
+  border: 0;
+}
+
+.miniHeaderFont {
+  color: #000;
+  text-align: center;
+  font-family: Inter;
+  font-size: 1.5rem;
+  font-style: normal;
+  font-weight: bold;
+  line-height: normal;
+}
+
+.miniBox {
+  width: 21.25rem;
+  height: 20.8125rem;
+  flex-shrink: 0;
+  background-color: white;
+}
+
+.miniInputBox {
+  display: flex;
+  width: 21.25rem;
+  height: 3.125rem;
+  padding-top: 16px;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: flex-start;
+  gap: 0.875rem;
+  flex-shrink: 0;
+  border: 0;
+  font-weight: bold;
+  color: black;
+}
+
+.wrongPwdConfirm,
+.wrongPwd,
+.wrongEmail {
+  color: var(--red_error, #DF2626);
+  font-family: Inter;
+  font-size: 0.75rem;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+}
+
+.miniBoxLine {
+  width: 21.25rem;
+  height: 0.0625rem;
+  flex-shrink: 0;
+  border-radius: 0.0625rem;
+  background: var(--black_theme, #000);
+}
+
+.miniButton {
+  display: flex;
+  margin-top: 100px;
+  width: 21.25rem;
+  height: 3.125rem;
+  padding: 0.9375rem 0rem 1rem 0rem;
+  justify-content: center;
+  align-items: center;
+  flex-shrink: 0;
+  color: white;
+  font-weight: bold;
+  border-radius: 0.4375rem;
+  background: var(--black_theme, #000);
+}
+
+.miniFailButton {
+  display: flex;
+  margin-top: 100px;
+  width: 21.25rem;
+  height: 3.125rem;
+  padding: 0.9375rem 0rem 1rem 0rem;
+  justify-content: center;
+  align-items: center;
+  flex-shrink: 0;
+  color: white;
+  font-weight: bold;
+  border-radius: 0.4375rem;
+  border: 0;
+  background: var(--gray_btn_disabled, #DDD);
+}
+
+/* 결제 결과 페이지 */
+
+.payBox {
+  width: 21.25rem;
+  height: 20.8125rem;
+  flex-shrink: 0;
+  background-color: white;
+}
+
+.payHeaderFont {
+  color: blue;
+  text-align: center;
+  font-family: Inter;
+  font-size: 1.5rem;
+  font-style: normal;
+  font-weight: bold;
+  line-height: normal;
+  margin: auto;
+}
+
+.payHeaderFailFont {
+  color: red;
+  text-align: center;
+  font-family: Inter;
+  font-size: 1.5rem;
+  font-style: normal;
+  font-weight: bold;
+  line-height: normal;
+  margin: auto;
+}
+
+.payProductBox,
+.payDateBox,
+.payMethodBox,
+.payPriceBox {
+  width: 21rem;
+  height: 3.4375rem;
+  flex-shrink: 0;
+  background-color: white;
+  float: right;
+  display: flex;
+}
+
+.payProduct {
+  margin-left: 20px;
+  width: 14.0625rem;
+  height: 3.4375rem;
+  flex-shrink: 0;
+  background-color: white;
+  float: right;
+}
+
+.payPrice {
+  margin-left: 20px;
+  width: 14.0625rem;
+  height: 2.0625rem;
+  flex-shrink: 0;
+  background-color: white;
+  float: right;
+}
+
+.payMethod {
+  margin-left: 20px;
+  width: 14.0625rem;
+  height: 2.0625rem;
+  flex-shrink: 0;
+  background-color: white;
+  float: right;
+}
+
+.payDate {
+  margin-left: 20px;
+  width: 14.0625rem;
+  height: 2.0625rem;
+  flex-shrink: 0;
+  background-color: white;
+  float: right;
+}
+
+.paySecondBtn {
+  display: flex;
+  margin-top: 20px;
+  width: 21.25rem;
+  height: 3.125rem;
+  padding: 0.9375rem 0rem 1rem 0rem;
+  justify-content: center;
+  align-items: center;
+  flex-shrink: 0;
+  color: white;
+  font-weight: bold;
+  border-radius: 0.4375rem;
+  background: var(--black_theme, #000);
 }
 
 /* 페이징 */
