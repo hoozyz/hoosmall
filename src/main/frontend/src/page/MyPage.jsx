@@ -1,83 +1,90 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { useNavigate, useParams } from "react-router-dom";
-import LogoutHeader from "./LogoutHeader";
+import "./HomePage.css";
+import { useNavigate } from "react-router-dom";
+import List from "./List";
+import LoginHeader from "./LoginHeader";
 import Footer from "./Footer";
 
-function DetailPage() {
-  const { pId } = useParams(); // url/{pid} 처럼 변수 가져오기
-  const [isDrop, setDrop] = useState(false);
-  const [isEvent, setEvent] = useState(false);
-  const [firstPrice, setFirstPrice] = useState(100000);
-  const [price, setPrice] = useState(100000);
+function MyPage() {
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageInfo, setPageInfo] = useState([]);
+  const [products, setProducts] = useState([]);
+  const [pages, setPages] = useState([]);
 
-  const couponDrop = () => {
-    setDrop((isDrop) => !isDrop); // 클릭마다 drop 여부
-  };
+  const getProduct = async () => {
+    const res = await axios.get("/product/"+{currentPage});
+    setProducts(res.products); // 응답 중에서 상품들 리스트
+    setPageInfo(res.pageInfo); // 응답 중 페이지에 대한 정보
 
-  const discount = (per) => {
-    couponDrop();
-    switch (
-      per // 세일마다 가격 다르게
-    ) {
-      case "one":
-        setPrice(Math.ceil(firstPrice * 0.9));
-        break;
-      case "two":
-        setPrice(Math.ceil(firstPrice * 0.8));
-        break;
-      case "three":
-        setPrice(Math.ceil(firstPrice * 0.7));
-        break;
+    const pageArr = [];
+    // 현재 페이지의 시작페이지부터 마지막 페이지 까지 페이지 번호 넣기
+    for (let i = pageInfo.startPage; i <= pageInfo.lastPage; i++) {
+      pageArr.push(i);
     }
+    setPages(pageArr);
   };
 
   useEffect =
     (() => {
-      // event일 떄마다 30퍼 세일
-      discount("three");
+      getProduct();
     },
-    [isEvent]);
+    [currentPage]);
+
+  const goToPage = (page) => {
+    setCurrentPage(page);
+  };
 
   return (
     <div className="page">
-      <LogoutHeader />
+      <LoginHeader />
       <main>
-        <div className="detailBox">
-          <div className="detailImgBox"></div>
-          <div className="detailInfoBox">
-            <div className="detailTitle">
-              <h2>어남어마너아머낭ㅁㄴㅇㅁ</h2>
-            </div>
-            <div className="detailCoupon">
-              <button className="detailCouponBtn" onClick={() => couponDrop()}>
-                쿠폰을 선택하세요.
-              </button>
-              <div className={isDrop ? "dropContent" : "hideContent"}>
-                <button onClick={() => discount("one")}>10% 할인 쿠폰</button>
-                <button onClick={() => discount("two")}>20% 할인 쿠폰</button>
-                <button onClick={() => discount("three")}>30% 할인 쿠폰</button>
-              </div>
-            </div>
-            <div className="detailEvent">
-              <h2>
-                {isEvent
-                  ? "금토일 이벤트 30% 할인"
-                  : "할인중이 아닙니다. 금토일을 기다려주세요."}
-              </h2>
-            </div>
-            <div className="detailPrice">
-              <h2>{price}원</h2>
-            </div>
-          </div>
+        <div className="mypageTitle">나의 결제내역</div>
+        <div className="mainContainer">
+          {products.map((product, idx) => (
+            <List key={product.id} product={product} idx={idx} />
+          ))}
         </div>
-        <button type="" className="payBtn">
-          결제하기
-        </button>
+
+        <div className="pagination">
+          {currentPage !== 1 && (
+            <>
+              <button className="firstPage" onClick={() => goToPage(1)}>
+              </button>
+              <button
+                className="prevPage"
+                onClick={() => goToPage(currentPage - 1)}
+              >
+              </button>
+            </>
+          )}
+
+          {pages.map((page) => (
+            <button
+              key={page}
+              onClick={() => goToPage(page)}
+              className={currentPage === page ? "pageActive" : "pageBtn"}
+            >
+              {page}
+            </button>
+          ))}
+
+          {currentPage !== pageInfo.maxPage && (
+            <>
+              <button
+                className="nextPage"
+                onClick={() => goToPage(currentPage + 1)}
+              ></button>
+              <button
+                className="lastPage"
+                onClick={() => goToPage(pageInfo.maxPage)}
+              ></button>
+            </>
+          )}
+        </div>
       </main>
       <Footer />
     </div>
   );
 }
-
-export default DetailPage;
+export default MyPage;

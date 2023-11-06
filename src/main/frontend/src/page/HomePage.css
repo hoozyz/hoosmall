@@ -28,6 +28,22 @@ main {
 
 /* 홈페이지 메인 */
 
+/* h2
+
+{
+  display: block;
+  font-size: 1.5em;
+  font-weight: bold;
+}
+
+h3
+
+{
+  display: block;
+  font-size: 1.17em;
+  font-weight: bold;
+} */
+
 .mainContainer {
   flex-wrap: wrap;
   display: flex;
@@ -55,6 +71,7 @@ main {
   background-image: url(http://shopping.phinf.naver.net/main_1031546/10315467179.jpg);
   background-color: white;
   background-size: cover;
+  border: 0;
 }
 
 .mainInfoBox {
@@ -67,20 +84,82 @@ main {
 }
 
 .mainCategory {
-  margin-bottom: 50px;
+  margin-top: 20px;
+  margin-bottom: 70px;
   width: 5rem;
   height: 2rem;
+  display: block;
+  font-size: 1.5em;
+  font-weight: bold;
 }
 
 .mainTitle {
-  margin-bottom: 50px;
   width: 12 rem;
   height: 3.6875rem;
+  display: block;
+  font-size: 1.2em;
+  font-weight: bold;
 }
 
 .mainPrice {
+  margin-top: 100px;
   width: 9rem;
   height: 1.7rem;
+  display: block;
+  font-size: 1.5em;
+  font-weight: bold;
+}
+
+/* 마이페이지 */
+
+.mypageTitle {
+  font-size: 2em;
+  font-weight: bold;
+  width: 100%;
+  text-align: center;
+}
+
+.myTitle {
+  margin-top: 20px;
+  margin-bottom: 70px;
+  width: 12 rem;
+  height: 3.6875rem;
+  display: block;
+  font-size: 1.2em;
+  font-weight: bold;
+}
+
+.myPayBox {
+  width: 12rem;
+  height: 2rem;
+  margin-top: 100px;
+}
+
+.myDate {
+  width: 12rem;
+  height: 1.9375rem;
+  flex-shrink: 0;
+  display: block;
+  font-size: 1.5em;
+  font-weight: bold;
+}
+
+.myPayPrice {
+  width: 6rem;
+  height: 1.9375rem;
+  float: left;
+  display: block;
+  font-size: 1.5em;
+  font-weight: bold;
+}
+
+.myPayCancel {
+  width: 6rem;
+  height: 1.9375rem;
+  float: right;
+  text-decoration: none;
+  border: 0;
+  background-color: white;
 }
 
 /* 상세 페이지 메인 */
@@ -545,7 +624,7 @@ main {
   color: #000;
   text-align: center;
   font-family: Inter;
-  font-size: 1.75rem;
+  font-size: 1.5rem;
   font-style: normal;
   font-weight: 400;
   line-height: normal;

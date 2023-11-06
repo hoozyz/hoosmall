@@ -12,8 +12,8 @@ function LoginPage() {
   const [isEmail, setIsEmail] = useState(false);
   const [isPwd, setIsPwd] = useState(false);
 
-  const emailRegEx = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i;
-  const passwordRegEx = /^(?=.*[a-zA-Z])(?=.*[0-9]).{8,16}$/;
+  const emailRegEx = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i
+  const passwordRegEx = /^(?=.*[a-zA-Z])(?=.*[0-9]).{8,16}$/
 
   const isValid = isEmail && isPwd;
 
@@ -88,7 +88,7 @@ function LoginPage() {
 
           <button
             className={isValid ? "miniButton" : "miniFailButton"}
-            onClick={() => submit()}
+            onClick={isValid ? () => submit() : undefined}
           >
             로그인
           </button>
