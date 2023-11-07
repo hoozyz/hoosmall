@@ -8,8 +8,17 @@ function DetailPage() {
   const { pId } = useParams(); // url/{pid} 처럼 변수 가져오기
   const [isDrop, setDrop] = useState(false);
   const [isEvent, setEvent] = useState(false);
+  const [product, setProduct] = useState([]);
   const [firstPrice, setFirstPrice] = useState(100000);
   const [price, setPrice] = useState(100000);
+
+  const getProduct = async () => {
+    const res = await axios.get("/product/"+{pId});
+
+    setProduct(res.data);
+    setFirstPrice(product.price);
+    setPrice(product.price);
+  };
 
   const couponDrop = () => {
     setDrop((isDrop) => !isDrop); // 클릭마다 drop 여부
@@ -47,7 +56,7 @@ function DetailPage() {
           <div className="detailImgBox"></div>
           <div className="detailInfoBox">
             <div className="detailTitle">
-              <h2>어남어마너아머낭ㅁㄴㅇㅁ</h2>
+              <h2>상품명상품명상품명상품명상품명상품명상품명상품명상품명</h2>
             </div>
             <div className="detailCoupon">
               <button className="detailCouponBtn" onClick={() => couponDrop()}>

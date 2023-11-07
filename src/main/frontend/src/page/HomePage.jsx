@@ -6,54 +6,23 @@ import Product from "./Product";
 import LogoutHeader from "./LogoutHeader";
 import Footer from "./Footer";
 
-function App() {
-  const products = [
-    { id: 1, name: "Product 1" },
-    { id: 2, name: "Product 2" },
-    { id: 3, name: "Product 3" },
-    { id: 4, name: "Product 4" },
-    { id: 5, name: "Product 5" },
-    { id: 6, name: "Product 6" },
-    { id: 7, name: "Product 7" },
-    { id: 1, name: "Product 1" },
-    { id: 2, name: "Product 2" },
-    { id: 3, name: "Product 3" },
-    { id: 4, name: "Product 4" },
-    { id: 5, name: "Product 5" },
-    { id: 6, name: "Product 6" },
-    { id: 7, name: "Product 7" },
-    { id: 1, name: "Product 1" },
-    { id: 2, name: "Product 2" },
-    { id: 3, name: "Product 3" },
-    { id: 4, name: "Product 4" },
-    { id: 5, name: "Product 5" },
-    { id: 6, name: "Product 6" },
-    { id: 7, name: "Product 7" },
-    { id: 1, name: "Product 1" },
-    { id: 2, name: "Product 2" },
-    { id: 3, name: "Product 3" },
-    { id: 4, name: "Product 4" },
-    { id: 5, name: "Product 5" },
-    { id: 6, name: "Product 6" },
-    { id: 7, name: "Product 7" },
-  ];
-  const productsPerPage = 6;
+function HomePage() {
   const [currentPage, setCurrentPage] = useState(1);
-
-  const totalPages = Math.ceil(products.length / productsPerPage);
-  const pageRange = 5;
-  const pageNumbers = [];
-
-  for (let i = 1; i <= Math.min(totalPages, pageRange); i++) {
-    pageNumbers.push(i);
-  }
-
-  const startIndex = (currentPage - 1) * productsPerPage;
-  const endIndex = startIndex + productsPerPage;
-  const currentProducts = products.slice(startIndex, endIndex);
+  const [pageInfo, setPageInfo] = useState([]);
+  const [products, setProducts] = useState([]);
+  const [pages, setPages] = useState([]);
 
   const getProduct = async () => {
-    const res = await axios.get();
+    const res = await axios.get("/product/"+{currentPage});
+    setProducts(res.products); // 응답 중에서 상품들 리스트
+    setPageInfo(res.pageInfo); // 응답 중 페이지에 대한 정보
+
+    const pageArr = [];
+    // 현재 페이지의 시작페이지부터 마지막 페이지 까지 페이지 번호 넣기
+    for (let i = pageInfo.startPage; i <= pageInfo.lastPage; i++) {
+      pageArr.push(i);
+    }
+    setPages(pageArr);
   };
 
   useEffect =
@@ -71,7 +40,7 @@ function App() {
       <LogoutHeader />
       <main>
         <div className="mainContainer">
-          {currentProducts.map((product, idx) => (
+          {products.map((product, idx) => (
             <Product key={product.id} product={product} idx={idx} />
           ))}
         </div>
@@ -80,18 +49,16 @@ function App() {
           {currentPage !== 1 && (
             <>
               <button className="firstPage" onClick={() => goToPage(1)}>
-                <img src="/" alt="" />
               </button>
               <button
                 className="prevPage"
                 onClick={() => goToPage(currentPage - 1)}
               >
-                <img src="" alt="" />
               </button>
             </>
           )}
 
-          {pageNumbers.map((page) => (
+          {pages.map((page) => (
             <button
               key={page}
               onClick={() => goToPage(page)}
@@ -101,7 +68,7 @@ function App() {
             </button>
           ))}
 
-          {currentPage !== totalPages && (
+          {currentPage !== pageInfo.maxPage && (
             <>
               <button
                 className="nextPage"
@@ -109,7 +76,7 @@ function App() {
               ></button>
               <button
                 className="lastPage"
-                onClick={() => goToPage(totalPages)}
+                onClick={() => goToPage(pageInfo.maxPage)}
               ></button>
             </>
           )}
@@ -119,4 +86,4 @@ function App() {
     </div>
   );
 }
-export default App;
+export default HomePage;

@@ -17,7 +17,10 @@ function CancelPage() {
         </div>
         <div className="payBox">
           <div className="payProductBox">
-            <div>취소 제품명:</div> <div className="payProduct">살아숨쉬는 사과asㅁㄴㅇㅁㄴㅇdasdasdasdadasdasdasd</div>
+            <div>취소 제품명:</div>{" "}
+            <div className="payProduct">
+              상품명상품명상품명상품명상품명상품명상품명상품명상품명
+            </div>
           </div>
           <div className="payPriceBox">
             <div>취소 금액:</div> <div className="payPrice">100000원</div>
@@ -28,7 +31,7 @@ function CancelPage() {
           <div className="payDateBox">
             <div>취소 날짜:</div> <div className="payDate">2022.11.02</div>
           </div>
-          <button className="miniButton" onClick={myPage()}>
+          <button className="miniButton" onClick={() => myPage()}>
             마이페이지
           </button>
         </div>
