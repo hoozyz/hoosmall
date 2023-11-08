@@ -27,14 +27,10 @@ public class RefreshToken {
 	@Column(nullable = false)
 	private String token;
 	
-	@Column(nullable = false, name = "expire_date")
-	private Long expireDate;
-	
 	@Builder
 	public RefreshToken(String id, String token, long expireDate) {
 		this.id = id;
 		this.token = token;
-		this.expireDate = expireDate;
 	}
 	
 	// 토큰 업데이트

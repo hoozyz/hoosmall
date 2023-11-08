@@ -9,19 +9,6 @@ import jakarta.persistence.OneToOne;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
-<<<<<<< HEAD
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-
-@Entity
-@Getter
-@Setter
-@AllArgsConstructor
-@NoArgsConstructor
-@Builder
-=======
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -29,7 +16,6 @@ import lombok.NoArgsConstructor;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
->>>>>>> 12a2e3897b23b7048f77d3886f35394840029100
 @Table(name = "category")
 public class Category {
 	

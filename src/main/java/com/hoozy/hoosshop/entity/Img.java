@@ -2,30 +2,14 @@ package com.hoozy.hoosshop.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-<<<<<<< HEAD
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
-=======
-import jakarta.persistence.GeneratedValue;import jakarta.persistence.GenerationType;
->>>>>>> 12a2e3897b23b7048f77d3886f35394840029100
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
-<<<<<<< HEAD
 import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-
-@Entity
-@Getter
-@Setter
-@AllArgsConstructor
-@NoArgsConstructor
-@Builder
-=======
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -33,7 +17,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
->>>>>>> 12a2e3897b23b7048f77d3886f35394840029100
+@Builder
 @Table(name = "img")
 public class Img {
 	

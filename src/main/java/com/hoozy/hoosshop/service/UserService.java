@@ -20,7 +20,9 @@ import com.hoozy.hoosshop.repository.UserRepository;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 
+@Log4j2
 @Service
 @RequiredArgsConstructor
 public class UserService {
@@ -30,6 +32,13 @@ public class UserService {
 	private final TokenProvider tokenProvider;
 	private final RefreshTokenRepository refreshTokenRepository;
 	private final AuthenticationManagerBuilder authenticationManagerBuilder;
+	
+	// 토큰으로 이메일 응답하기
+	public UserResponseDTO findById(Long userId) {
+		return userRepository.findById(userId)
+				.map(UserResponseDTO::toRequest) // 인스턴스::메소드
+				.orElseThrow(() -> new RuntimeException("로그인 유저 정보가 없습니다."));
+	}
 	
 	@Transactional
 	public UserResponseDTO register(UserRequestDTO userRequestDTO) {
@@ -70,7 +79,7 @@ public class UserService {
 	@Transactional
 	public TokenDTO refresh(TokenRequestDTO tokenRequestDTO) {
 		
-		// refresh token 검증
+		// refresh token 검증 -> 만료 여부 검사
 		if(!tokenProvider.validateToken(tokenRequestDTO.getRefreshToken())) {
 			throw new RuntimeException("Refresh Token이 유효하지 않습니다.");
 		}
@@ -83,13 +92,8 @@ public class UserService {
 				// optional은 결과가 안나올 시 예외를 thorw 해야한다.
 				.orElseThrow(() -> new RuntimeException("로그아웃 된 사용자입니다."));
 		
-		// 만료기간 비교
-		if((new Date()).getTime() >= refreshToken.getExpireDate()) {
-			throw new RuntimeException("Refresh Token이 만료되었습니다. 다시 로그인 해주세요.");
-		}
-		
 		// Refresh Token 일치 검사
-		if(!refreshToken.getToken().equals(tokenRequestDTO.getRefreshToken())) {
+		if(!tokenRequestDTO.getRefreshToken().equals(refreshToken.getToken())) {
 			throw new RuntimeException("토큰의 유저 정보가 일치하지 않습니다.");
 		}
 		

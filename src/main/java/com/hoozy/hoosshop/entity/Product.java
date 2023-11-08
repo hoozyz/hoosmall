@@ -13,19 +13,7 @@ import jakarta.persistence.OneToOne;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
-<<<<<<< HEAD
 import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-
-@Entity
-@Getter
-@Setter
-@AllArgsConstructor
-@NoArgsConstructor
-@Builder
-=======
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -33,7 +21,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
->>>>>>> 12a2e3897b23b7048f77d3886f35394840029100
+@Builder
 @Table(name = "product")
 @IdClass(ProductID.class) // 복합키 매핑
 public class Product implements Serializable {
@@ -58,9 +46,5 @@ public class Product implements Serializable {
 	
 	@OneToOne
 	@JoinColumn(name = "cate_id")
-<<<<<<< HEAD
 	private Category category;
-=======
-	private Category cate;
->>>>>>> 12a2e3897b23b7048f77d3886f35394840029100
 }

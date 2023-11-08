@@ -5,28 +5,8 @@ import java.util.List;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-<<<<<<< HEAD
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.SequenceGenerator;
-import jakarta.persistence.Table;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-
-@Entity
-@Getter
-@Setter
-@AllArgsConstructor
-@NoArgsConstructor
-@Builder
-=======
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -36,6 +16,7 @@ import jakarta.persistence.OneToOne;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -43,7 +24,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
->>>>>>> 12a2e3897b23b7048f77d3886f35394840029100
+@Builder
 @Table(name = "users")
 public class Users {
 	
@@ -61,7 +42,6 @@ public class Users {
 	@Column(nullable = false)
 	private String pwd;
 	
-<<<<<<< HEAD
 	@Enumerated(EnumType.STRING)
 	private Auth auth;
 	
@@ -75,12 +55,4 @@ public class Users {
 		this.pwd = pwd;
 		this.auth = auth;
 	}
-=======
-	@OneToOne
-	@JoinColumn(name = "role_id") // 외래키를 가지고 있는 테이블
-	private Role role;
-	
-	@OneToMany(mappedBy = "users") // 참조되는 테이블 명
-	private List<Payment> payments = new ArrayList<>(); 
->>>>>>> 12a2e3897b23b7048f77d3886f35394840029100
 }

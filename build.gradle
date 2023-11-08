@@ -25,6 +25,13 @@ repositories {
 	mavenCentral()
 }
 
+allprojects {
+	repositories {
+		mavenCentral()
+		maven { url 'https://jitpack.io' }
+	}
+}
+
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-jdbc'
 	implementation 'org.springframework.boot:spring-boot-starter-security'
@@ -33,8 +40,6 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.springframework.boot:spring-boot-starter-web-services'
 	implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:3.0.2'
-
-	implementation 'org.springframework.session:spring-session-jdbc'
 
 	compileOnly 'org.projectlombok:lombok'
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'

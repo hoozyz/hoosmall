@@ -9,12 +9,32 @@ import Footer from "./Footer";
 function HomePage() {
   const [currentPage, setCurrentPage] = useState(1);
   const [pageInfo, setPageInfo] = useState([]);
-  const [products, setProducts] = useState([]);
+  // const [products, setProducts] = useState([]);
   const [pages, setPages] = useState([]);
+
+  const products = [{
+    product:"",
+    id:1
+  },{
+    product:"",
+    id:2
+  },{
+    product:"",
+    id:3
+  },{
+    product:"",
+    id:4
+  },{
+    product:"",
+    id:5
+  },{
+    product:"",
+    id:6
+  }];
 
   const getProduct = async () => {
     const res = await axios.get("/product/"+{currentPage});
-    setProducts(res.products); // 응답 중에서 상품들 리스트
+    // setProducts(res.products); // 응답 중에서 상품들 리스트
     setPageInfo(res.pageInfo); // 응답 중 페이지에 대한 정보
 
     const pageArr = [];

@@ -7,10 +7,22 @@ import Footer from "./Footer";
 function DetailPage() {
   const { pId } = useParams(); // url/{pid} 처럼 변수 가져오기
   const [isDrop, setDrop] = useState(false);
-  const [isEvent, setEvent] = useState(false);
   const [product, setProduct] = useState([]);
   const [firstPrice, setFirstPrice] = useState(100000);
   const [price, setPrice] = useState(100000);
+  const [count, setCount] = useState(30);
+  const [coupon, setCoupon] = useState(2);
+  const [isCoupon, setIsCoupon] = useState(false);
+  console.log(pId);
+  let isEvent = false;
+
+  let now = new Date(); // 현재
+  let day = now.getDay(); // 현재 요일 일요일부터 0~6
+  if(day === 0 ||day === 5 || day === 6) { // 금토일 이면
+    isEvent = true;
+  } else {
+    isEvent = false;
+  }
 
   const getProduct = async () => {
     const res = await axios.get("/product/"+{pId});
@@ -18,35 +30,29 @@ function DetailPage() {
     setProduct(res.data);
     setFirstPrice(product.price);
     setPrice(product.price);
+    setCount(product.count);
   };
 
   const couponDrop = () => {
-    setDrop((isDrop) => !isDrop); // 클릭마다 drop 여부
-  };
-
-  const discount = (per) => {
-    couponDrop();
-    switch (
-      per // 세일마다 가격 다르게
-    ) {
-      case "one":
-        setPrice(Math.ceil(firstPrice * 0.9));
-        break;
-      case "two":
-        setPrice(Math.ceil(firstPrice * 0.8));
-        break;
-      case "three":
-        setPrice(Math.ceil(firstPrice * 0.7));
-        break;
+    if(coupon) { // 쿠폰이 있을 때
+      if(!isCoupon) { // 쿠폰을 사용하지 않았을 때
+        setDrop((isDrop) => !isDrop); // 클릭마다 drop 여부
+      }
     }
   };
 
-  useEffect =
-    (() => {
-      // event일 떄마다 30퍼 세일
-      discount("three");
-    },
-    [isEvent]);
+  const couponCancelDrop = () => {
+    setIsCoupon(!isCoupon); // 쿠폰 사용 취소
+    setCoupon((coupon) => coupon + 1); // 쿠폰 1개 다시 되돌리기
+    setPrice(firstPrice); // 가격 돌려놓기
+  };
+
+  const discount = () => {
+    couponDrop();
+    setPrice(Math.ceil(firstPrice * 0.85));
+    setCoupon((coupon) => coupon - 1); // 쿠폰 1개 빼기
+    setIsCoupon(!isCoupon);
+  };
 
   return (
     <div className="page">
@@ -56,27 +62,24 @@ function DetailPage() {
           <div className="detailImgBox"></div>
           <div className="detailInfoBox">
             <div className="detailTitle">
-              <h2>상품명상품명상품명상품명상품명상품명상품명상품명상품명</h2>
+              상품명상품명상품명상품명상품명상품명상품명상품명상품명
             </div>
             <div className="detailCoupon">
-              <button className="detailCouponBtn" onClick={() => couponDrop()}>
-                쿠폰을 선택하세요.
+              <button className="detailCouponBtn" onClick={isCoupon ? () => couponCancelDrop() : () => couponDrop()}>
+                { isCoupon ? "쿠폰 사용 취소하기" : coupon ? `15% 할인 쿠폰 남은 개수 : ${coupon}개` : "남은 쿠폰이 없습니다."}
               </button>
-              <div className={isDrop ? "dropContent" : "hideContent"}>
-                <button onClick={() => discount("one")}>10% 할인 쿠폰</button>
-                <button onClick={() => discount("two")}>20% 할인 쿠폰</button>
-                <button onClick={() => discount("three")}>30% 할인 쿠폰</button>
+              <div className="productCount">남은 수량: {count}개</div>
+              <div className={isDrop ? "dropCouponContent" : "hideContent"}>
+                <button onClick={() => discount()}>15% 할인 쿠폰</button>
               </div>
             </div>
             <div className="detailEvent">
-              <h2>
                 {isEvent
                   ? "금토일 이벤트 30% 할인"
-                  : "할인중이 아닙니다. 금토일을 기다려주세요."}
-              </h2>
+                  : "이벤트 요일이 아닙니다."}
             </div>
             <div className="detailPrice">
-              <h2>{price}원</h2>
+              {price}원
             </div>
           </div>
         </div>
