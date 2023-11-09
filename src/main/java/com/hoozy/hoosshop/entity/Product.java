@@ -1,7 +1,5 @@
 package com.hoozy.hoosshop.entity;
 
-import java.io.Serializable;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -24,15 +22,12 @@ import lombok.NoArgsConstructor;
 @Builder
 @Table(name = "product")
 @IdClass(ProductID.class) // 복합키 매핑
-public class Product implements Serializable {
+public class Product {
 	
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY, generator = "PRODUCT_SEQ_GENERATOR")
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "PRODUCT_SEQ_GENERATOR")
 	@SequenceGenerator(name = "PRODUCT_SEQ_GENERATOR", sequenceName = "PRODUCT_SEQ", initialValue = 1, allocationSize = 1)
 	private Long id;
-	
-	@Column(name = "img_id")
-	private Long imgId;
 	
 	@Column(nullable = false)
 	private String title;
@@ -40,10 +35,13 @@ public class Product implements Serializable {
 	@Column(nullable = false)
 	private int price;
 	
+	// 단방향
+	@Id // PFK는 PK임과 동시에 외래키이므로, 연관관계를 맺음과 동시에 @Id 어노테이션으로 기본키임을 명시해야한다.
 	@OneToOne
 	@JoinColumn(name = "img_id")
-	private Img img;
+	public Img img;
 	
+	// 단방향
 	@OneToOne
 	@JoinColumn(name = "cate_id")
 	private Category category;

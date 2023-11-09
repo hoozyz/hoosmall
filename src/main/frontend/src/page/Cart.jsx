@@ -61,7 +61,7 @@ const Cart = ({ cart, idx, setTotal, coupon, changeCoupon }) => {
   useEffect(() => {
     // 구매수량, 쿠폰수 가 바뀔 때 마다 쿠폰 사용할 수 있는 개수 적용하기
     // 사용할 수 있는 쿠폰 개수는 buycount 보다 적고, coupon보다 적어야함
-    if (count >= coupon) {
+    if (buyCount >= coupon) {
       // 선택한 수량이 사용가능한 쿠폰 개수를 초과할 때 -> 쿠폰 개수만큼 사용가능
       if (coupon <= 3) {
         // 쿠폰 개수가 3개보다 크면 3개로 고정, 적으면 쿠폰 개수로 고정
@@ -71,7 +71,7 @@ const Cart = ({ cart, idx, setTotal, coupon, changeCoupon }) => {
       }
     } else {
       // 선택한 수량이 사용가능한 쿠폰보다 적을 때 -> 수량만큼만 사용가능
-      setUseCoupon(coupon);
+      setUseCoupon(buyCount);
     }
   }, [buyCount, coupon]);
 

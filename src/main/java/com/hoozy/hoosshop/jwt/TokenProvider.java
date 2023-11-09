@@ -27,13 +27,12 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.UnsupportedJwtException;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import lombok.extern.log4j.Log4j2;
 
+@Log4j2
 @Component
 public class TokenProvider { // 토큰을 만들어서 제공해주는 클래스
 	
-	// log4j2
-	private final Logger log = LoggerFactory.getLogger(TokenProvider.class);
-
 	private static final String AUTHORITIES_KEY = "auth";
 	private static final String BEARER_TYPE = "bearer";
 	private static final long ACCESS_TOKEN_EXPIRE_TIME = 1000 * 60 * 30; // 30분
@@ -52,6 +51,7 @@ public class TokenProvider { // 토큰을 만들어서 제공해주는 클래스
 		// 권한들 가져오기
 		String authorities = authentication.getAuthorities().stream().map(GrantedAuthority::getAuthority)
 				.collect(Collectors.joining(","));
+		log.info(authorities);
 
 		long now = (new Date()).getTime(); // 토큰 만료시간을 정하기 위해 현재 시간 가져오기
 
@@ -112,6 +112,7 @@ public class TokenProvider { // 토큰을 만들어서 제공해주는 클래스
 	public boolean validateToken(String token) {
 		try {
 			Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
+			return true;
 		} catch (io.jsonwebtoken.security.SecurityException | MalformedJwtException e) {
 			log.info("잘못된 JWT 서명입니다.");
 		} catch (ExpiredJwtException e) {

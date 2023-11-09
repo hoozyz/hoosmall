@@ -23,7 +23,4 @@ public class PayCancel {
 	
 	@Column(nullable = false)
 	private int status; // 1이면 취소, 0이면 결제 성공
-	
-	@OneToOne(mappedBy = "payCancel")
-	private Payment payment;
 }

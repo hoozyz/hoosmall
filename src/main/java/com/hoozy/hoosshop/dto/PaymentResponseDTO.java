@@ -13,7 +13,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class PaymentResponseDTO {
+public class PaymentResponseDTO { // 결제내역 응답 dto
 	private String productTitle; // 주문 제품명
 	private String merchantUid; // 주문고유번호
 	private int price; // 결제 금액

@@ -11,7 +11,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class PaymentRequestDTO {
+public class PaymentRequestDTO { // 결제 요청 dto
 	private String impUid; // 결제고유번호
 	private String merchantUid; // 상품고유번호
 	private int amount; // 결제 금액

@@ -22,13 +22,10 @@ import lombok.NoArgsConstructor;
 public class Img {
 	
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY, generator = "IMG_SEQ_GENERATOR")
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "IMG_SEQ_GENERATOR")
 	@SequenceGenerator(name = "IMG_SEQ_GENERATOR", sequenceName = "IMG_SEQ", initialValue = 1, allocationSize = 1)
 	private Long id;
 	
 	@Column(nullable = false)
 	private String link;
-	
-	@OneToOne(mappedBy = "img")
-	private Product product;
 }

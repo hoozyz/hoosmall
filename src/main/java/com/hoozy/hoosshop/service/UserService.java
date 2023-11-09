@@ -1,7 +1,5 @@
 package com.hoozy.hoosshop.service;
 
-import java.util.Date;
-
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
@@ -49,7 +47,8 @@ public class UserService {
 		
 		Users user = userRequestDTO.toUser(passwordEncoder); // 비밀번호 암호화
 		// JPA는 간단한 CRUD는 메소드로 자동으로 처리해준다.
-		return UserResponseDTO.toRequest(userRepository.save(user));
+		return UserResponseDTO.toRequest(userRepository.save(user)); 
+		// save 메소드는 리턴값이 있는 메소드로, 새로운 엔티티면 persist(새로 저장), 이미 있는거면 merge(병합)한다.
 	}
 	
 	@Transactional
@@ -78,7 +77,7 @@ public class UserService {
 	
 	@Transactional
 	public TokenDTO refresh(TokenRequestDTO tokenRequestDTO) {
-		
+
 		// refresh token 검증 -> 만료 여부 검사
 		if(!tokenProvider.validateToken(tokenRequestDTO.getRefreshToken())) {
 			throw new RuntimeException("Refresh Token이 유효하지 않습니다.");
