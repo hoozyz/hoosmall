@@ -12,9 +12,9 @@ const List = ({ list, idx }) => {
       <button className="mainImgBox">
       </button>
       <div className="mainInfoBox">
-        <div className="myTitle">
+        <button className="myTitle">
           상품명상품명상품명상품명상품명상품명상품명상품명상품명
-        </div>
+        </button>
         <div className="myDate">
           2023.11.05
         </div>

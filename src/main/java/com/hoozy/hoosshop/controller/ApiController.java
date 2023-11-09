@@ -69,9 +69,13 @@ public class ApiController {
 							break;
 						}
 					}
-					String title = jsonItem.get("title").toString();
-					String image = jsonItem.get("image").toString();
-					int price = Integer.parseInt(jsonItem.get("lprice").toString().replaceAll("[^0-9]", ""));
+					// 정규식으로 " 없애기
+					cate = cate.replaceAll("\"", "");
+					String title = jsonItem.get("title").toString().replaceAll("\"", "")
+							// 정규식으로 html 태그 없애기
+							.replaceAll("<[^>]*>", ""); 
+					String image = jsonItem.get("image").toString().replaceAll("\"", ""); 
+					int price = Integer.parseInt(jsonItem.get("lprice").toString().replaceAll("\"", ""));
 					Img img = Img.builder()
 								.link(image)
 								.build();
@@ -85,6 +89,7 @@ public class ApiController {
 										.img(img)
 										.price(price)
 										.title(title)
+										.stock(30) // 초기 재고 30개
 										.build();
 					imgService.save(img);
 					categoryService.save(category);

@@ -43,6 +43,9 @@ public class Users {
 	@Enumerated(EnumType.STRING)
 	private Auth auth;
 	
+	@Column(nullable = false, name = "coupon_count")
+	private int couponCount;
+	
 	@OneToMany(mappedBy = "user") // 참조되는 필드명
 	private List<Payment> payments = new ArrayList<>(); 
 	

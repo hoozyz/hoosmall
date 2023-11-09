@@ -10,32 +10,15 @@ function DetailPage() {
   const [product, setProduct] = useState([]);
   const [firstPrice, setFirstPrice] = useState(100000);
   const [price, setPrice] = useState(100000);
-  const [count, setCount] = useState(30);
   const [coupon, setCoupon] = useState(2);
   const [isCoupon, setIsCoupon] = useState(false);
-  console.log(pId);
-  let isEvent = false;
-
-  let now = new Date(); // 현재
-  let day = now.getDay(); // 현재 요일 일요일부터 0~6
-  if(day === 0 ||day === 5 || day === 6) { // 금토일 이면
-    isEvent = true;
-  } else {
-    isEvent = false;
-  }
-
-  const getProduct = async () => {
-    const res = await axios.get("/product/"+{pId});
-
-    setProduct(res.data);
-    setFirstPrice(product.price);
-    setPrice(product.price);
-    setCount(product.count);
-  };
+  const [isEvent, setIsEvent] = useState(false);
 
   const couponDrop = () => {
-    if(coupon) { // 쿠폰이 있을 때
-      if(!isCoupon) { // 쿠폰을 사용하지 않았을 때
+    if (coupon) {
+      // 쿠폰이 있을 때
+      if (!isCoupon) {
+        // 쿠폰을 사용하지 않았을 때
         setDrop((isDrop) => !isDrop); // 클릭마다 drop 여부
       }
     }
@@ -54,6 +37,33 @@ function DetailPage() {
     setIsCoupon(!isCoupon);
   };
 
+  const cart = async () => { // 장바구니에 넣고 끝
+    const res = await axios.get(`/cart/save`);
+  };
+
+  useEffect(() => {
+    const getProduct = async () => {
+      const res = await axios.get(`/product/detail/${pId}`);
+      const data = res.data;
+      setProduct(data);
+      setFirstPrice(data.price);
+      setPrice(data.price);
+    };
+
+    getProduct();
+
+    let now = new Date(); // 현재
+    let day = now.getDay(); // 현재 요일 일요일부터 0~6
+    if (day === 0 || day === 5 || day === 6) {
+      // 금토일 이면
+      setIsEvent(true);
+      setFirstPrice(Math.ceil(firstPrice * 0.7));
+      setPrice(Math.ceil(firstPrice * 0.7));
+    } else {
+      setIsEvent(false);
+    }
+  }, [pId]);
+
   return (
     <div className="page">
       <LogoutHeader />
@@ -61,26 +71,32 @@ function DetailPage() {
         <div className="detailBox">
           <div className="detailImgBox"></div>
           <div className="detailInfoBox">
-            <div className="detailTitle">
-              상품명상품명상품명상품명상품명상품명상품명상품명상품명
-            </div>
+            <div className="detailTitle">{product.title}</div>
             <div className="detailCoupon">
-              <button className="detailCouponBtn" onClick={isCoupon ? () => couponCancelDrop() : () => couponDrop()}>
-                { isCoupon ? "쿠폰 사용 취소하기" : coupon ? `15% 할인 쿠폰 남은 개수 : ${coupon}개` : "남은 쿠폰이 없습니다."}
+              <button
+                className="detailCouponBtn"
+                onClick={
+                  isCoupon ? () => couponCancelDrop() : () => couponDrop()
+                }
+              >
+                {isCoupon
+                  ? "쿠폰 사용 취소하기"
+                  : coupon
+                  ? `15% 할인 쿠폰 남은 개수 : ${coupon}개`
+                  : "남은 쿠폰이 없습니다."}
               </button>
-              <div className="productCount">남은 수량: {count}개</div>
+              <button className="detailCartBtn" onClick={() => cart()}>
+                장바구니 넣기
+              </button>
+              <div className="productCount">남은 수량: {product.stock}개</div>
               <div className={isDrop ? "dropCouponContent" : "hideContent"}>
                 <button onClick={() => discount()}>15% 할인 쿠폰</button>
               </div>
             </div>
             <div className="detailEvent">
-                {isEvent
-                  ? "금토일 이벤트 30% 할인"
-                  : "이벤트 요일이 아닙니다."}
+              {isEvent ? "금토일 이벤트 30% 할인 적용" : "이벤트 요일이 아닙니다."}
             </div>
-            <div className="detailPrice">
-              {price}원
-            </div>
+            <div className="detailPrice">{isEvent ? Math.ceil(price * 0.7) : price}원</div>
           </div>
         </div>
         <button type="" className="payBtn">

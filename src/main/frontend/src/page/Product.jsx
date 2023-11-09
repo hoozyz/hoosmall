@@ -1,22 +1,25 @@
 import React from "react";
 import classNames from "classnames";
-import { Navigate } from "react-router-dom";
 
-const Product = ({ product, idx }) => {
-  const pId = product.id;
-  const goDetail = () => {
-    Navigate("/detail/"+{pId});
+const Product = ({ product, idx, goDetail }) => {
+  const { id, category, link, title, price } = product;
+
+  const detail = () => {
+    goDetail(id);
   };
 
   return (
     <button className={classNames("list", "list" + { idx })}>
-      <div className="mainImgBox"></div>
+      <div
+        className="mainImgBox"
+        style={{ background: `url(${link})`, backgroundSize: "300px 300px" }}
+      ></div>
       <div className="mainInfoBox">
-        <div className="mainCategory">카테고리</div>
-        <button className="mainTitle" onClick={() => goDetail()}>
-          상품명상품명상품명상품명상품명상품명상품명상품명상품명
+        <div className="mainCategory">{category}</div>
+        <button className="mainTitle" onClick={() => detail()}>
+          {title}
         </button>
-        <div className="mainPrice">100000원</div>
+        <div className="mainPrice">{price}원</div>
       </div>
     </button>
   );

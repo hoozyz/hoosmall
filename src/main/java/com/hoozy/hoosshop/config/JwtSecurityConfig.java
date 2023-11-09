@@ -1,9 +1,12 @@
-package com.hoozy.hoosshop.jwt;
+package com.hoozy.hoosshop.config;
 
 import org.springframework.security.config.annotation.SecurityConfigurerAdapter;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.web.DefaultSecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+
+import com.hoozy.hoosshop.jwt.JwtFilter;
+import com.hoozy.hoosshop.jwt.TokenProvider;
 
 import lombok.RequiredArgsConstructor;
 

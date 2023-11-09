@@ -12,24 +12,29 @@ function HomePage() {
   const [products, setProducts] = useState([]);
   const [pages, setPages] = useState([]);
 
-  const getProduct = async () => {
-    const res = await axios.get("/product/list/"+{currentPage});
-    setProducts(res.products); // 응답 중에서 상품들 리스트
-    setPageInfo(res.pageInfo); // 응답 중 페이지에 대한 정보
+  const navigate = useNavigate();
 
-    const pageArr = [];
-    // 현재 페이지의 시작페이지부터 마지막 페이지 까지 페이지 번호 넣기
-    for (let i = pageInfo.startPage; i <= pageInfo.lastPage; i++) {
-      pageArr.push(i);
-    }
-    setPages(pageArr);
+  useEffect(() => {
+    const getProduct = async () => {
+      const res = await axios.get(`/product/list/${currentPage}`);
+      const data = res.data;
+      setProducts(data.list); // 응답 중에서 상품들 리스트
+      setPageInfo(data.pageInfo); // 응답 중 페이지에 대한 정보
+  
+      const pageArr = [];
+      // 현재 페이지의 시작페이지부터 마지막 페이지 까지 페이지 번호 넣기
+      for (let i = pageInfo.startPage; i <= pageInfo.endPage; i++) {
+        pageArr.push(i);
+      }
+      setPages(pageArr);
+    };
+
+    getProduct();
+  }, [currentPage]);
+
+  const goDetail = (id) => {
+    navigate("/detail/"+id);
   };
-
-  useEffect =
-    (() => {
-      getProduct();
-    },
-    [currentPage]);
 
   const goToPage = (page) => {
     setCurrentPage(page);
@@ -41,20 +46,21 @@ function HomePage() {
       <main>
         <div className="mainContainer">
           {products.map((product, idx) => (
-            <Product key={product.id} product={product} idx={idx} />
+            <Product key={product.id} product={product} idx={idx} goDetail={goDetail} />
           ))}
         </div>
 
         <div className="pagination">
           {currentPage !== 1 && (
             <>
-              <button className="firstPage" onClick={() => goToPage(1)}>
-              </button>
+              <button
+                className="firstPage"
+                onClick={() => goToPage(1)}
+              ></button>
               <button
                 className="prevPage"
                 onClick={() => goToPage(currentPage - 1)}
-              >
-              </button>
+              ></button>
             </>
           )}
 

@@ -90,10 +90,10 @@ h3
 .mainCategory {
   margin-top: 20px;
   margin-bottom: 70px;
-  width: 5rem;
+  width: 100%;
   height: 2rem;
   display: block;
-  font-size: 1.5em;
+  font-size: 1.2em;
   font-weight: bold;
 }
 
@@ -101,7 +101,7 @@ h3
   width: 12 rem;
   height: 3.6875rem;
   display: block;
-  font-size: 1.2em;
+  font-size: 1.3em;
   font-weight: bold;
   border: 0;
   background-color:inherit;
@@ -145,6 +145,9 @@ h3
   display: block;
   font-size: 1.2em;
   font-weight: bold;
+  border: 0;
+  background-color:inherit;
+  text-align: left;
 }
 
 .myPayBox {
@@ -223,6 +226,19 @@ h3
 .detailCouponBtn {
   margin: auto;
   width: 50%;
+  height: 30px;
+
+  color: white;
+  border-radius: 50px;
+  border: none;
+  cursor: pointer;
+  background-color: black;
+  box-shadow: 0 4px 15px 0 rgba(45, 54, 65, 0.75);
+}
+
+.detailCartBtn {
+  margin: auto;
+  width: 25%;
   height: 30px;
 
   color: white;

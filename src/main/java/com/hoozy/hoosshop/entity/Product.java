@@ -35,6 +35,9 @@ public class Product {
 	@Column(nullable = false)
 	private int price;
 	
+	@Column(nullable = false)
+	private int stock;
+	
 	// 단방향
 	@Id // PFK는 PK임과 동시에 외래키이므로, 연관관계를 맺음과 동시에 @Id 어노테이션으로 기본키임을 명시해야한다.
 	@OneToOne

@@ -1,4 +1,4 @@
-package com.hoozy.hoosshop.jwt;
+package com.hoozy.hoosshop.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -10,6 +10,10 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
+import com.hoozy.hoosshop.jwt.JwtAccessDeniedHandler;
+import com.hoozy.hoosshop.jwt.JwtAuthenticationEntryPoint;
+import com.hoozy.hoosshop.jwt.TokenProvider;
+
 import lombok.RequiredArgsConstructor;
 
 @Configuration
@@ -19,6 +23,7 @@ public class SecurityConfig {
 	private final TokenProvider tokenProvider;
 	private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
 	private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
+	private final CorsConfig corsConfig;
 	
 	@Bean
 	public PasswordEncoder passwordEncoder() {
@@ -42,6 +47,8 @@ public class SecurityConfig {
 										.requestMatchers(new AntPathRequestMatcher("/product/**")).permitAll()
 										// 나머지는 인증 없이 접근 불가
 										.anyRequest().authenticated())
+				// CORS 프론트 포트인 3000포트 허용
+				.addFilter(corsConfig.corsFilter())
 				// exception 404를 401, 403으로 나누는 설정 클래스 추가
 				.exceptionHandling(auth -> auth
 									.authenticationEntryPoint(jwtAuthenticationEntryPoint)
