@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 
 function SuccessPage() {
   const navigate = useNavigate();
+  const location = useLocation(); // 데이터 json 형태로 가져오기
+  const { id, method, pId, price, productTitle, paymentDate} = location.state;
 
   const myPage = () => {
     navigate("/mypage");
@@ -17,19 +19,19 @@ function SuccessPage() {
         </div>
         <div className="payBox">
           <div className="payProductBox">
-            <div>구매 제품명:</div>{" "}
+            <div>구매 제품명:</div>
             <div className="payProduct">
-              상품명상품명상품명상품명상품명상품명상품명상품명상품명
+              {productTitle}
             </div>
           </div>
           <div className="payPriceBox">
-            <div>결제 금액:</div> <div className="payPrice">100000원</div>
+            <div>결제 금액:</div> <div className="payPrice">{price}원</div>
           </div>
           <div className="payMethodBox">
-            <div>결제 수단:</div> <div className="payMethod">카드</div>
+            <div>결제 수단:</div> <div className="payMethod">{method}</div>
           </div>
           <div className="payDateBox">
-            <div>결제 날짜:</div> <div className="payDate">2022.11.02</div>
+            <div>결제 날짜:</div> <div className="payDate">{new Date(paymentDate).toLocaleString()}</div>
           </div>
           <button className="miniButton" onClick={() => myPage()}>
             마이페이지

@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 
 function CancelPage() {
   const navigate = useNavigate();
+  const location = useLocation();
+  const { productTitle, price, method, paymentDate} = location.state;
 
   const myPage = () => {
     navigate("/mypage");
@@ -19,17 +21,17 @@ function CancelPage() {
           <div className="payProductBox">
             <div>취소 제품명:</div>{" "}
             <div className="payProduct">
-              상품명상품명상품명상품명상품명상품명상품명상품명상품명
+              {productTitle}
             </div>
           </div>
           <div className="payPriceBox">
-            <div>취소 금액:</div> <div className="payPrice">100000원</div>
+            <div>취소 금액:</div> <div className="payPrice">{price}원</div>
           </div>
           <div className="payMethodBox">
-            <div>결제 수단:</div> <div className="payMethod">카드</div>
+            <div>결제 수단:</div> <div className="payMethod">{method}</div>
           </div>
           <div className="payDateBox">
-            <div>취소 날짜:</div> <div className="payDate">2022.11.02</div>
+            <div>취소 날짜:</div> <div className="payDate">{new Date(paymentDate).toLocaleString()}</div>
           </div>
           <button className="miniButton" onClick={() => myPage()}>
             마이페이지

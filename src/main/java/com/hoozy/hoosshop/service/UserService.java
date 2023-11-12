@@ -31,6 +31,17 @@ public class UserService {
 	private final RefreshTokenRepository refreshTokenRepository;
 	private final AuthenticationManagerBuilder authenticationManagerBuilder;
 	
+	// users에 변경이 있을 때 save
+	public Users save(Users user) {
+		return userRepository.save(user);
+	}
+	
+	// pk로 user 가져오기
+	public Users getUsers(Long id) {
+		return userRepository.findById(id)
+				.orElseThrow(() -> new RuntimeException("DB 정보가 없습니다."));
+	}
+	
 	// 토큰으로 이메일 응답하기
 	public UserResponseDTO findById(Long userId) {
 		return userRepository.findById(userId)

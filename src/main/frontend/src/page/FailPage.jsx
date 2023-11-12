@@ -1,13 +1,19 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 
 function FailPage() {
-  const { pId } = useParams();
   const navigate = useNavigate();
+  const location = useLocation(); // 데이터 json 형태로 가져오기
+  const {failMassage, pId} = location.state;
+  console.log(location.state);
 
   const detailPage = () => {
-    navigate("/detail" + pId);
+    navigate("/detail/" + pId);
+  };
+
+  const MyCart = () => {
+    navigate("/cart");
   };
 
   const homePage = () => {
@@ -24,11 +30,11 @@ function FailPage() {
           <div className="payProductBox">
             <div>실패 이유:</div>
             <div className="payProduct">
-            잔액 부족
+           {failMassage}
             </div>
           </div>
-          <button className="miniButton" onClick={() => detailPage()}>
-            제품 상세페이지
+          <button className="miniButton" onClick={pId === 0 ? () => MyCart() : () => detailPage()}>
+            {pId === 0 ? "장바구니 페이지" : "제품 상세페이지"}
           </button>
           <button className="paySecondBtn" onClick={() => homePage()}>
             홈페이지

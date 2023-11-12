@@ -79,20 +79,20 @@ public class ApiController {
 					Img img = Img.builder()
 								.link(image)
 								.build();
+					imgService.save(img);
 					
 					Category category = Category.builder()
 											.cate(cate)
 											.build();
 
 					Product product = Product.builder()
-										.category(category)
+										.category(categoryService.save(category))
 										.img(img)
 										.price(price)
 										.title(title)
 										.stock(30) // 초기 재고 30개
 										.build();
-					imgService.save(img);
-					categoryService.save(category);
+					
 					productService.save(product);
 				}
 			}

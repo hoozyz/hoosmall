@@ -2,6 +2,7 @@ package com.hoozy.hoosshop.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -40,12 +41,12 @@ public class Product {
 	
 	// 단방향
 	@Id // PFK는 PK임과 동시에 외래키이므로, 연관관계를 맺음과 동시에 @Id 어노테이션으로 기본키임을 명시해야한다.
-	@OneToOne
+	@OneToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "img_id")
 	public Img img;
 	
 	// 단방향
-	@OneToOne
+	@OneToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "cate_id")
 	private Category category;
 }

@@ -10,7 +10,6 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToOne;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -32,13 +31,19 @@ public class Payment {
 	private Long id;
 	
 	@Column(nullable = false, name = "imp_uid")
-	private String impUid;
+	private String impUid; // 결제 고유 번호
 	
 	@Column(nullable = false, name = "merchant_uid")
-	private String merchantUid;
+	private String merchantUid; // 상품 고유 번호
 	
 	@Column(nullable = false)
-	private int price;
+	private int price; // 결제한 금액
+	
+	@Column(nullable = false)
+	private int count; // 구매한 상품 개수
+	
+	@Column(nullable = false)
+	private int coupon; // 사용한 쿠폰 개수
 	
 	@Column(nullable = false)
 	private String method; // 결제 수단

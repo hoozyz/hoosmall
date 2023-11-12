@@ -2,6 +2,7 @@ package com.hoozy.hoosshop.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
@@ -25,10 +26,12 @@ public class ProductService {
 		productRepository.save(product);
 	}
 
+	@Transactional
 	public long getCount() {
 		return productRepository.count();
 	}
 
+	@Transactional
 	public List<ProductListResponseDTO> getList(PageInfo pageInfo) {
 		List<ProductListResponseDTO> list = new ArrayList<>();
 		
@@ -42,10 +45,27 @@ public class ProductService {
 		return list;
 	}
 	
-	public ProductListResponseDTO getDetail(long pId) {
+	@Transactional
+	public ProductListResponseDTO getDetail(Long pId) {
 		ProductID key = ProductID.toProductID(pId);
 		
 		return ProductListResponseDTO.toProductResponse(productRepository.findById(key)
 					.orElseThrow(() -> new RuntimeException("데이터가 없습니다.")));
+	}
+
+	@Transactional
+	public Product findById(Long pId) {
+		ProductID key = ProductID.toProductID(pId);
+		return productRepository.findById(key)
+				.orElseThrow(() -> new RuntimeException("DB 정보가 없습니다."));
+	}
+
+	@Transactional
+	public void changeStock(Long id, int count) {
+		ProductID key = ProductID.toProductID(id);
+		Product product = productRepository.findById(key)
+				.orElseThrow(() -> new RuntimeException("DB 조회에 실패하였습니다."));
+		product.setStock(product.getStock() - count); // 재고에서 구매한 개수만큼 빼기
+		save(product);
 	}
 }

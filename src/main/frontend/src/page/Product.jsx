@@ -1,22 +1,27 @@
 import React from "react";
 import classNames from "classnames";
+import { useNavigate } from "react-router-dom";
 
-const Product = ({ product, idx, goDetail }) => {
+const Product = ({ product, idx }) => {
+  const navigate = useNavigate();
   const { id, category, link, title, price } = product;
 
-  const detail = () => {
-    goDetail(id);
+  const goDetail = () => {
+    navigate("/detail/"+id);
   };
 
   return (
     <button className={classNames("list", "list" + { idx })}>
       <div
         className="mainImgBox"
-        style={{ background: `url(${link})`, backgroundSize: "300px 300px" }}
+        style={{
+          background: `url(${link}) no-repeat center`,
+          backgroundSize: "cover",
+        }}
       ></div>
       <div className="mainInfoBox">
         <div className="mainCategory">{category}</div>
-        <button className="mainTitle" onClick={() => detail()}>
+        <button className="mainTitle" onClick={() => goDetail()}>
           {title}
         </button>
         <div className="mainPrice">{price}원</div>

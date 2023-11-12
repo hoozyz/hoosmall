@@ -41,7 +41,7 @@ public class ProductController {
 	}
 	
 	@GetMapping("/detail/{pId}")
-	public ResponseEntity<ProductListResponseDTO> getDetail(@PathVariable long pId) {
+	public ResponseEntity<ProductListResponseDTO> getDetail(@PathVariable Long pId) {
 		log.info("pId : " + pId);
 		return ResponseEntity.ok(productService.getDetail(pId));
 	}

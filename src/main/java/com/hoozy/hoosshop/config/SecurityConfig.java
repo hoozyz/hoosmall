@@ -43,7 +43,9 @@ public class SecurityConfig {
 										.requestMatchers(new AntPathRequestMatcher("/user/register")).permitAll()
 										.requestMatchers(new AntPathRequestMatcher("/user/login")).permitAll()
 //										.requestMatchers(new AntPathRequestMatcher("/user/refresh")).permitAll()
+										.requestMatchers(new AntPathRequestMatcher("/pay/**")).permitAll()
 										.requestMatchers(new AntPathRequestMatcher("/api/**")).permitAll()
+										.requestMatchers(new AntPathRequestMatcher("/cart/**")).permitAll()
 										.requestMatchers(new AntPathRequestMatcher("/product/**")).permitAll()
 										// 나머지는 인증 없이 접근 불가
 										.anyRequest().authenticated())

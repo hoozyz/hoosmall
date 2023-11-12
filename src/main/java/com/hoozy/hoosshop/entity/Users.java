@@ -49,7 +49,6 @@ public class Users {
 	@OneToMany(mappedBy = "user") // 참조되는 필드명
 	private List<Payment> payments = new ArrayList<>(); 
 	
-	@Builder
 	public Users(Long id, String email, String pwd, Auth auth) {
 		this.id = id;
 		this.email = email;
