@@ -41,11 +41,12 @@ public class SecurityConfig {
 				.authorizeHttpRequests(auth -> auth
 										// 회원가입, 로그인, 홈페이지 상품리스트, 상품 상세정보만 인증 필요 없이 접근 가능
 										.requestMatchers(new AntPathRequestMatcher("/user/register")).permitAll()
+										.requestMatchers(new AntPathRequestMatcher("/user/register/**")).permitAll()
 										.requestMatchers(new AntPathRequestMatcher("/user/login")).permitAll()
 //										.requestMatchers(new AntPathRequestMatcher("/user/refresh")).permitAll()
-										.requestMatchers(new AntPathRequestMatcher("/pay/**")).permitAll()
+//										.requestMatchers(new AntPathRequestMatcher("/pay/**")).permitAll()
 										.requestMatchers(new AntPathRequestMatcher("/api/**")).permitAll()
-										.requestMatchers(new AntPathRequestMatcher("/cart/**")).permitAll()
+//										.requestMatchers(new AntPathRequestMatcher("/cart/**")).permitAll()
 										.requestMatchers(new AntPathRequestMatcher("/product/**")).permitAll()
 										// 나머지는 인증 없이 접근 불가
 										.anyRequest().authenticated())

@@ -2,6 +2,8 @@ package com.hoozy.hoosshop.service;
 
 import org.springframework.stereotype.Service;
 
+import com.hoozy.hoosshop.config.CustomException;
+import com.hoozy.hoosshop.config.ErrorCode;
 import com.hoozy.hoosshop.entity.Category;
 import com.hoozy.hoosshop.repository.CategoryRepository;
 
@@ -26,6 +28,6 @@ public class CategoryService {
 		
 		// 카테고리가 있으면 카테고리를 DB에서 가져와 리턴
 		else return categoryRepository.findByCate(cate.getCate())
-			.orElseThrow(() -> new RuntimeException("DB에서 가져오지 못했습니다."));
+			.orElseThrow(() -> new CustomException(ErrorCode.RESOURCE_NOT_FOUND));
 	}
 }

@@ -37,23 +37,25 @@ function LoginPage() {
     } else {
       setPwd("");
       setIsPwd(false);
-      setWrongPwd("비밀번호는 8글자 이상, 16글자 이하 입니다.");
+      setWrongPwd("비밀번호는 영문,숫자를 포함한 8 ~ 16 자리입니다.");
     }
   };
 
   const submit = async () => {
     if (isValid) {
       const res = await axios
-        .post("/login", {
+        .post("/user/login", {
           email: email,
           pwd: pwd,
         })
         .then((res) => {
           window.alert("로그인에 성공하였습니다.");
-          navigate("/");
+
+          localStorage.setItem("token", JSON.stringify(res.data));
+          window.location.replace("/");
         })
-        .error((error) => {
-          window.alert("로그인에 실패하였습니다.");
+        .catch((error) => {
+          window.alert("로그인에 실패하였습니다. 에러 메시지 : " + error);
         });
     } else {
       return false;

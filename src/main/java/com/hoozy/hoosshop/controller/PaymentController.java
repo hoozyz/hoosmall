@@ -8,18 +8,19 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.hoozy.hoosshop.config.CustomException;
+import com.hoozy.hoosshop.config.ErrorCode;
 import com.hoozy.hoosshop.dto.IdCouponDTO;
 import com.hoozy.hoosshop.dto.PageInfo;
 import com.hoozy.hoosshop.dto.PaymentCancelRequestdto;
@@ -73,7 +74,7 @@ public class PaymentController {
 		log.info("getEndList : " + pageInfo.getEndList());
 		
 		Map<String, Object> map = new HashMap<>();
-		map.put("list", paymentService.getPaymentList(Long.valueOf(1), pageInfo));
+		map.put("list", paymentService.getPaymentList(Long.valueOf(SecurityUtil.getCurrentUserId()), pageInfo));
 		map.put("pageInfo", pageInfo);
 
 		return ResponseEntity.ok(map);
@@ -117,30 +118,25 @@ public class PaymentController {
 			
 			amount = paymentResponse.getAmount().intValue(); // bigDecimal to int
 		} catch (IamportResponseException e) {
-			return ResponseEntity.ok().body(PaymentResponseDTO.builder()
-					.failMassage("존재하지 않는 결제정보입니다.")
-					.build());
+			throw new CustomException(ErrorCode.PAYMENT_NOT_FOUND); // 존재하지 않는 결제정보
 		}
 		
 		// 결제 정보 DB에 넣기위한 결제할 상품 리스트
 		List<Payment> paymentList = new ArrayList<>();
-		Users user = userService.getUsers(Long.valueOf(1)); // securityutil.getid로 가져오기
+		Users user = userService.getUsers(Long.valueOf(SecurityUtil.getCurrentUserId())); // securityutil.getid로 가져오기
 		
 		// DB에서 상품 id로 원가를 가져오기 -> 결제한 건수만큼
 		int totalPrice = 0; // 결제한 건수별로 금액을 가져와 합친 결제되어야 할 총 금액
 		int couponCount = 0; // 총 사용한 쿠폰 수
 		for(IdCouponDTO idCoupon : paymentValidateRequestDTO.getIdCoupon()) {
 			Product prod = productService.findById(Long.valueOf(idCoupon.getPId()));
-			log.info("price1 : " + prod.getPrice());
 			int price = prod.getPrice() * idCoupon.getCount(); // 상품 원가에 개수 곱한게 세일 전 가격
 			// 이벤트면 30퍼 세일
 			if(isEvent) price = (int) Math.ceil(price * 0.7);
-			log.info("price2 : " + price);
 			int coupon = idCoupon.getCoupon();
 			couponCount += coupon;
 			// 쿠폰 수 만큼 15퍼 세일 -> 원가 * 쿠폰 수 * 0.15 만큼 빼기
 			price = price - ((int) Math.ceil(price * coupon * 0.15));
-			log.info("price3 : " + price);
 			totalPrice += price;
 			
 			Payment payment = Payment.builder()
@@ -164,9 +160,7 @@ public class PaymentController {
 			// CancelData : uid, boolean(true면 imp_uid, false면 merchant_uid), amount(bigDecimal)
 			// 취소 요청 api
 			iamportClient.cancelPaymentByImpUid(new CancelData(impUid, true, new BigDecimal(amount)));
-			return ResponseEntity.ok().body(PaymentResponseDTO.builder()
-					.failMassage("금액이 일치하지 않습니다.")
-					.build());	
+			throw new CustomException(ErrorCode.PAYMENT_NOT_ACCORD); // 금액이 일치하지 않을 때
 		}
 		
 		// 결제한 상품 개수 만큼 결제내역 DB에 넣기
@@ -189,7 +183,7 @@ public class PaymentController {
 	}
 	
 	// 결제취소 -> 장바구니에서 여러개 한 번에 결제해도 하나씩 취소 가능 -> 일부 취소
-	@PostMapping("/cancel")
+	@PutMapping("/cancel")
 	public ResponseEntity<PaymentResponseDTO> cancel(@RequestBody PaymentCancelRequestdto paymentCancelRequestDTO) throws IOException, IamportResponseException {
 		iamportClient = new IamportClient(impKey, impSecret);
 		
@@ -200,12 +194,11 @@ public class PaymentController {
 			iamportClient.cancelPaymentByImpUid(new CancelData(paymentCancelRequestDTO.getImpUid(),
 					true, new BigDecimal(paymentCancelRequestDTO.getAmount())));
 		} catch (IamportResponseException e) {
-			ResponseEntity.ok(PaymentResponseDTO.builder()
-					.failMassage("취소 요청에 실패하였습니다."));
+			throw new CustomException(ErrorCode.PAYMENT_CANCEL_FAILED); // 취소 요청 실패
 		}
 		
 		Payment payment = paymentService.findById(paymentCancelRequestDTO.getId());
-		Users user = userService.getUsers(Long.valueOf(1));
+		Users user = userService.getUsers(Long.valueOf(SecurityUtil.getCurrentUserId()));
 		user.setCouponCount(user.getCouponCount() + payment.getCoupon()); // 쿠폰 쓴거 돌려놓기
 		
 		return ResponseEntity.ok(PaymentResponseDTO.toPaymentResponseDTO(

@@ -6,6 +6,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.hoozy.hoosshop.config.CustomException;
+import com.hoozy.hoosshop.config.ErrorCode;
 import com.hoozy.hoosshop.dto.TokenDTO;
 import com.hoozy.hoosshop.dto.TokenRequestDTO;
 import com.hoozy.hoosshop.dto.UserRequestDTO;
@@ -20,7 +22,6 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 
-@Log4j2
 @Service
 @RequiredArgsConstructor
 public class UserService {
@@ -39,21 +40,21 @@ public class UserService {
 	// pk로 user 가져오기
 	public Users getUsers(Long id) {
 		return userRepository.findById(id)
-				.orElseThrow(() -> new RuntimeException("DB 정보가 없습니다."));
+				.orElseThrow(() ->  new CustomException(ErrorCode.RESOURCE_NOT_FOUND));
 	}
 	
 	// 토큰으로 이메일 응답하기
 	public UserResponseDTO findById(Long userId) {
 		return userRepository.findById(userId)
 				.map(UserResponseDTO::toRequest) // 인스턴스::메소드
-				.orElseThrow(() -> new RuntimeException("로그인 유저 정보가 없습니다."));
+				.orElseThrow(() ->  new CustomException(ErrorCode.USERS_NOT_FOUND));
 	}
 	
 	@Transactional
 	public UserResponseDTO register(UserRequestDTO userRequestDTO) {
 		
 		if(userRepository.existsByEmail(userRequestDTO.getEmail())) {
-			throw new RuntimeException("이미 가입되어 있는 회원입니다.");
+			throw  new CustomException(ErrorCode.DUPLICATE_USER);
 		}
 		
 		Users user = userRequestDTO.toUser(passwordEncoder); // 비밀번호 암호화
@@ -88,11 +89,9 @@ public class UserService {
 	
 	@Transactional
 	public TokenDTO refresh(TokenRequestDTO tokenRequestDTO) {
-
+		
 		// refresh token 검증 -> 만료 여부 검사
-		if(!tokenProvider.validateToken(tokenRequestDTO.getRefreshToken())) {
-			throw new RuntimeException("Refresh Token이 유효하지 않습니다.");
-		}
+		tokenProvider.validateToken(tokenRequestDTO.getRefreshToken());
 		
 		// access token에서 member id 가져오기
 		Authentication authentication = tokenProvider.getAuthetication(tokenRequestDTO.getAccessToken());
@@ -100,11 +99,11 @@ public class UserService {
 		// DB에서 위에 member id를 기반으로 refresh token 값 가져옴 (만료기간 비교)
 		RefreshToken refreshToken = refreshTokenRepository.findById(authentication.getName())
 				// optional은 결과가 안나올 시 예외를 thorw 해야한다.
-				.orElseThrow(() -> new RuntimeException("로그아웃 된 사용자입니다."));
+				.orElseThrow(() ->  new CustomException(ErrorCode.UNKNOWN_ERROR));
 		
 		// Refresh Token 일치 검사
 		if(!tokenRequestDTO.getRefreshToken().equals(refreshToken.getToken())) {
-			throw new RuntimeException("토큰의 유저 정보가 일치하지 않습니다.");
+			throw  new CustomException(ErrorCode.WRONG_TYPE_ERROR);
 		}
 		
 		// 새로운 토큰 생성
@@ -115,5 +114,12 @@ public class UserService {
 		refreshTokenRepository.save(newRefreshToken);
 		
 		return tokenDTO;
+	}
+
+	public boolean findByEmail(String email) {
+		if(userRepository.existsByEmail(email)) {
+			return true;
+		}
+		return false; 
 	}
 }

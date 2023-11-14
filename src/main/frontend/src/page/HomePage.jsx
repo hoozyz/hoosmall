@@ -3,6 +3,7 @@ import axios from "axios";
 import "./HomePage.css";
 import Product from "./Product";
 import LogoutHeader from "./LogoutHeader";
+import LoginHeader from "./LoginHeader";
 import Footer from "./Footer";
 
 function HomePage() {
@@ -10,6 +11,11 @@ function HomePage() {
   const [pageInfo, setPageInfo] = useState([]);
   const [products, setProducts] = useState([]);
   const [pages, setPages] = useState([]);
+  const token = localStorage.getItem("token");
+  
+  const goToPage = (page) => {
+    setCurrentPage(page);
+  };
 
   useEffect(() => {
     const getProduct = async () => {
@@ -29,13 +35,9 @@ function HomePage() {
     getProduct();
   }, [currentPage]);
 
-  const goToPage = (page) => {
-    setCurrentPage(page);
-  };
-
   return (
     <div className="page">
-      <LogoutHeader />
+      {token === null ? <LogoutHeader /> : <LoginHeader token={token} />}
       <main>
         <div className="mainContainer">
           {products.map((product, idx) => (

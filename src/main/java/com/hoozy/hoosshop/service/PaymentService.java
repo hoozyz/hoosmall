@@ -6,6 +6,8 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
+import com.hoozy.hoosshop.config.CustomException;
+import com.hoozy.hoosshop.config.ErrorCode;
 import com.hoozy.hoosshop.dto.PageInfo;
 import com.hoozy.hoosshop.dto.PaymentResponseDTO;
 import com.hoozy.hoosshop.entity.Payment;
@@ -53,15 +55,15 @@ public class PaymentService {
 	@Transactional
 	public Payment cancel(Long id) {
 		Payment payment = paymentRepository.findById(id)
-				.orElseThrow(() -> new RuntimeException("DB 정보가 없습니다."));
+				.orElseThrow(() -> new CustomException(ErrorCode.RESOURCE_NOT_FOUND));
 		payment.setPayCancel(payCancelRepository.findById(Long.valueOf(2))
-				.orElseThrow(() -> new RuntimeException("DB 정보가 없습니다.")));
+				.orElseThrow(() -> new CustomException(ErrorCode.RESOURCE_NOT_FOUND)));
 		payment.setPaymentDate(new Timestamp(System.currentTimeMillis())); // 취소 날짜 현재시각으로 바꾸기
 		return paymentRepository.save(payment);
 	}
 
 	public Payment findById(Long id) {
 		return paymentRepository.findById(id)
-				.orElseThrow(() -> new RuntimeException("DB 정보가 없습니다."));
+				.orElseThrow(() ->  new CustomException(ErrorCode.RESOURCE_NOT_FOUND));
 	}
 }

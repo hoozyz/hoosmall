@@ -3,6 +3,9 @@ package com.hoozy.hoosshop.jwt;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
+import com.hoozy.hoosshop.config.CustomException;
+import com.hoozy.hoosshop.config.ErrorCode;
+
 public class SecurityUtil {
 	
 	private SecurityUtil() {}
@@ -13,7 +16,7 @@ public class SecurityUtil {
 		final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		
 		if(authentication == null || authentication.getName() == null) {
-			throw new RuntimeException("Security Context에 인증 정보가 없습니다.");
+			throw new CustomException(ErrorCode.CONTEXT_ACCESS_DENIED);
 		}
 		
 		// JwtFilter에서 SecurityContext에 세팅한 유저 정보를 꺼낸다.

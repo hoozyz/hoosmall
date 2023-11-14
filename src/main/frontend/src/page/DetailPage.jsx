@@ -3,6 +3,7 @@ import uuid from "react-uuid";
 import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
 import LogoutHeader from "./LogoutHeader";
+import LoginHeader from "./LoginHeader";
 import Footer from "./Footer";
 
 function DetailPage() {
@@ -12,9 +13,11 @@ function DetailPage() {
   const [product, setProduct] = useState([]);
   const [firstPrice, setFirstPrice] = useState(0);
   const [price, setPrice] = useState(0);
-  const [coupon, setCoupon] = useState(2);
+  const [coupon, setCoupon] = useState(0);
   const [isCoupon, setIsCoupon] = useState(false);
   const [isEvent, setIsEvent] = useState(false);
+  const token = JSON.parse(localStorage.getItem("token"));
+  console.log(token)
 
   const couponDrop = () => {
     if (coupon) {
@@ -41,16 +44,37 @@ function DetailPage() {
 
   const cart = async () => {
     // 장바구니에 넣고 끝 -> 6개면 못넣게 백엔드에서 보기
+    if (token === null) {
+      alert("장바구니는 회원만 이용할 수 있습니다.");
+      return false;
+    }
+
     const res = await axios.post(`/cart/save/${pId}`);
     const data = res.data;
-    if(data.errorMassage) alert(data.errorMassage);
+    if (data.code) alert(data.message);
     else window.location.replace("/cart");
   };
 
   // 결제
   const payment = async () => {
-    // const res = await axios.get(`/user/me`); // 회원의 이메일 가져오기
-    // let email = res.data;
+    if (token === null) {
+      alert("결제는 회원만 가능합니다.");
+      return false;
+    }
+    let email = "";
+    await axios
+      .get(`/user/me`, {
+        headers: {
+          Authorization: "Bearer " + token.accessToken,
+        },
+      })
+      .then((res) => {
+        email = res.data;
+      })
+      .catch((error) => {
+        alert(error);
+      }); // 회원의 이메일 가져오기
+
     var IMP = window.IMP;
     IMP.init("imp33422434");
 
@@ -58,11 +82,44 @@ function DetailPage() {
 
     // 사전 검증요청 -> 바로 아래에 requestpay에서 실제로 요청할 때 사전요청과 맞나 확인하기 위해
     await axios
-      .post("/pay/preorder", {
-        merchantUid: now,
-        amount: isEvent ? Math.ceil(price * 0.7) : price,
-      })
-      .then((res) => {
+      .post(
+        "/pay/preorder",
+        {
+          merchantUid: now,
+          amount: isEvent ? Math.ceil(price * 0.7) : price,
+        },
+        {
+          headers: {
+            Authorization: "Bearer " + token.accessToken,
+          },
+        }
+      )
+      .then(async (res) => {
+        const data = JSON.stringify(res.data);
+        console.log(data);
+        if (data.message !== null) { // 에러가 생겼을 때
+          if (data.code === "J003") {
+            // 토큰 만료
+            const refresh = await axios
+              .post("/user/refresh", {
+                accessToken: token.accessToken,
+                refreshToken: token.refreshToken,
+              })
+              .then((res) => {
+                console.log(res.data);
+                localStorage.setItem("token", JSON.stringify(res.data));
+                token = JSON.parse(JSON.stringify(res.data)); // 새로 발급받은 토큰 저장
+              })
+              .error((error) => {
+                alert(error);
+                return false;
+              });
+          } else {
+            alert(data.message);
+            window.location.reload();
+            return false;
+          }
+        }
         IMP.request_pay(
           {
             pg: "tosspayments", // 토스페이먼츠
@@ -70,28 +127,36 @@ function DetailPage() {
             name: product.title,
             pay_method: "card",
             amount: isEvent ? Math.ceil(price * 0.7) : price,
-            buyer_name: "홍길동",
-            buyer_email: "test@test.com",
+            buyer_name: "홍길동", // 이름 고정
+            buyer_email: email,
           },
           async (res) => {
             console.log(res);
             // PG 사에서 응답
-            if (!res.error_msg) {
+            if (!res.error_msg) { // 에러메시지가 없을 때 결제 완료
               console.log(pId);
               await axios
-                .post("/pay/validate", {
-                  impUid: res.imp_uid, // 결제 요청한 결제 고유 번호
-                  merchantUid: res.merchant_uid, // 결제 요청한 상품 고유 번호
-                  amount: isEvent ? Math.ceil(price * 0.7) : price, // 결제 요청한 금액
-                  idCoupon: [
-                    {
-                      // 제품번호와 쿠폰 세트 -> 제품번호에 해당하는 원가에 쿠폰 개수만큼 빼면 결제가격
-                      pId: pId,
-                      count: 1, // 상세에서는 한개만 구매가능 -> 구매 개수
-                      coupon: isCoupon ? 1 : 0, // 쿠폰을 썼으면 1개 안썼으면 0개
+                .post(
+                  "/pay/validate",
+                  {
+                    impUid: res.imp_uid, // 결제 요청한 결제 고유 번호
+                    merchantUid: res.merchant_uid, // 결제 요청한 상품 고유 번호
+                    amount: isEvent ? Math.ceil(price * 0.7) : price, // 결제 요청한 금액
+                    idCoupon: [
+                      {
+                        // 제품번호와 쿠폰 세트 -> 제품번호에 해당하는 원가에 쿠폰 개수만큼 빼면 결제가격
+                        pId: pId,
+                        count: 1, // 상세에서는 한개만 구매가능 -> 구매 개수
+                        coupon: isCoupon ? 1 : 0, // 쿠폰을 썼으면 1개 안썼으면 0개
+                      },
+                    ],
+                  },
+                  {
+                    headers: {
+                      Authorization: "Bearer " + token.accessToken,
                     },
-                  ],
-                })
+                  }
+                )
                 .then((res) => {
                   console.log(res);
                   const resultData = res.data;
@@ -156,7 +221,7 @@ function DetailPage() {
   return (
     <Fragment>
       <div className="page">
-        <LogoutHeader />
+        {token === null ? <LogoutHeader /> : <LoginHeader />}
         <main>
           <div className="detailBox">
             <div
@@ -174,7 +239,9 @@ function DetailPage() {
                     isCoupon ? () => couponCancelDrop() : () => couponDrop()
                   }
                 >
-                  {isCoupon
+                  {token === null
+                    ? "쿠폰은 회원만 사용가능합니다."
+                    : isCoupon
                     ? "쿠폰 사용 취소하기"
                     : coupon
                     ? `15% 할인 쿠폰 남은 개수 : ${coupon}개`

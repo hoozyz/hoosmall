@@ -6,8 +6,6 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.stream.Collectors;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -17,6 +15,8 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
+import com.hoozy.hoosshop.config.CustomException;
+import com.hoozy.hoosshop.config.ErrorCode;
 import com.hoozy.hoosshop.dto.TokenDTO;
 
 import io.jsonwebtoken.Claims;
@@ -32,7 +32,7 @@ import lombok.extern.log4j.Log4j2;
 @Log4j2
 @Component
 public class TokenProvider { // 토큰을 만들어서 제공해주는 클래스
-	
+
 	private static final String AUTHORITIES_KEY = "auth";
 	private static final String BEARER_TYPE = "bearer";
 	private static final long ACCESS_TOKEN_EXPIRE_TIME = 1000 * 60 * 30; // 30분
@@ -74,64 +74,65 @@ public class TokenProvider { // 토큰을 만들어서 제공해주는 클래스
 				.setExpiration(refreshTokenExpireDate) // payload "exp" : ms초
 				.signWith(key, SignatureAlgorithm.HS512) // header "alg" : "HS512"
 				.compact();
-		
-		return TokenDTO.builder()
-				.grantType(BEARER_TYPE)
-				.accessToken(accessToken)
-				.refreshToken(refreshToken)
+
+		return TokenDTO.builder().grantType(BEARER_TYPE).accessToken(accessToken).refreshToken(refreshToken)
 				.tokenExpire(accessTokenExpireDate.getTime()) // 만료기간 액세스토큰 만료기간
 				.build();
 	}
-	
+
 	// 토큰을 사용하여 Authentication 객체 리턴
 	public Authentication getAuthetication(String accessToken) {
-		
+
 		// 토큰 복호화
 		Claims claims = parseClaims(accessToken);
-		
-		if(claims.get(AUTHORITIES_KEY) == null) { // 권한이 없으면
-			throw new RuntimeException("권한 정보가 없는 토큰입니다.");
+
+		if (claims.get(AUTHORITIES_KEY) == null) { // 권한이 없으면
+			throw new CustomException(ErrorCode.ACCESS_DENIED);
 		}
-		
+
 		// claims 에서 권한 정보 가져오기
-		// claims 형태의 토큰을 알맞게 정렬하고, GrantedAuthority를 상속받은 SimpleGrantedAuthority 형태의 새 List를 생성
+		// claims 형태의 토큰을 알맞게 정렬하고, GrantedAuthority를 상속받은 SimpleGrantedAuthority 형태의 새
+		// List를 생성
 		// SimpleGrantedAuthority 객체에는 인가가 들어있다.
-		Collection<? extends GrantedAuthority> authorities = 
-				Arrays.stream(claims.get(AUTHORITIES_KEY).toString().split(","))
-				.map(SimpleGrantedAuthority::new)
+		Collection<? extends GrantedAuthority> authorities = Arrays
+				.stream(claims.get(AUTHORITIES_KEY).toString().split(",")).map(SimpleGrantedAuthority::new)
 				.collect(Collectors.toList());
-		
+
 		// UserDetails 객체를 만들어서 Authentication 객체 리턴
 		UserDetails principal = new User(claims.getSubject(), "", authorities);
-		
-		// UsernamePasswordAuthenticationToken 인스턴스는 UserDetails를 생성하고 SecurityContext에 사용하기 위해 만든 절차이다.
+
+		// UsernamePasswordAuthenticationToken 인스턴스는 UserDetails를 생성하고 SecurityContext에
+		// 사용하기 위해 만든 절차이다.
 		return new UsernamePasswordAuthenticationToken(principal, "", authorities);
 	}
-	
-	// 토큰을 검증하기 위한 메소드
+
+	// 토큰을 검증하기 위한 메소드 -> errorcode의 코드번호 리턴 -> 정상이면 1000
 	public boolean validateToken(String token) {
+		
+		// 각 에러마다 custom 으로 에러 응답하기
 		try {
 			Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
 			return true;
-		} catch (io.jsonwebtoken.security.SecurityException | MalformedJwtException e) {
-			log.info("잘못된 JWT 서명입니다.");
-		} catch (ExpiredJwtException e) {
-            log.info("만료된 JWT 토큰입니다.");
-        } catch (UnsupportedJwtException e) {
-            log.info("지원되지 않는 JWT 토큰입니다.");
-        } catch (IllegalArgumentException e) {
-            log.info("JWT 토큰이 잘못되었습니다.");
-        }
-        return false;
+		} catch (SecurityException | MalformedJwtException e) {
+			throw new CustomException(ErrorCode.WRONG_TYPE_ERROR);
+	    } catch (ExpiredJwtException e) {
+	    	throw new CustomException(ErrorCode.EXPIRED_TOKEN);
+	    } catch (UnsupportedJwtException e) {
+	    	throw new CustomException(ErrorCode.UNSUPPORTED_TOKEN);
+	    } catch (IllegalArgumentException e) {
+	    	throw new CustomException(ErrorCode.WRONG_TYPE_ERROR);
+	    } catch (Exception e) {
+	    	throw new CustomException(ErrorCode.UNKNOWN_ERROR);
+	    }
 	}
-	
+
 	// 토큰을 claims 객체로 만드는 메소드 -> 권한 정보가 있는지 체크 가능
 	// 만료된 토큰이어도 정보를 꺼내기 위해 따로 분리했다.
 	private Claims parseClaims(String accessToken) {
-        try {
-            return Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(accessToken).getBody();
-        } catch (ExpiredJwtException e) {
-            return e.getClaims();
-        }
-    }
+		try {
+			return Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(accessToken).getBody();
+		} catch (ExpiredJwtException e) {
+			return e.getClaims();
+		}
+	}
 }

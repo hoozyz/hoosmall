@@ -11,6 +11,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.hoozy.hoosshop.config.CustomException;
+import com.hoozy.hoosshop.config.ErrorCode;
+import com.hoozy.hoosshop.entity.Cart;
+import com.hoozy.hoosshop.jwt.SecurityUtil;
 import com.hoozy.hoosshop.service.CartService;
 
 import lombok.RequiredArgsConstructor;
@@ -23,22 +27,20 @@ public class CartController {
 	private final CartService cartService;
 	
 	@PostMapping("/save/{id}") // 장바구니에 넣기
-	public ResponseEntity<Map<String, Object>> save(@PathVariable Long id) {
+	public ResponseEntity<Cart> save(@PathVariable Long id) {
 		Map<String, Object> map = new HashMap<>();
 		if(cartService.count() == 6) {
-			map.put("errorMassage", "장바구니에 이미 6개의 상품이 있습니다.");
+			throw new CustomException(ErrorCode.CART_EXISTS_SIX);
 		} else if (cartService.isExist(id)) { 
-			map.put("errorMassage", "이미 장바구니에 있는 제품입니다.");
+			throw new CustomException(ErrorCode.CART_EXISTS_ONE);
 		} else {
-			map.put("cart", cartService.save(id));
+			return ResponseEntity.ok().body(cartService.save(id));
 		}
-		
-		return ResponseEntity.ok().body(map);
 	}
 	
 	@GetMapping("/list")
 	public ResponseEntity<Map<String, Object>> getList() {
-		return ResponseEntity.ok(cartService.getList(Long.valueOf(1)));
+		return ResponseEntity.ok(cartService.getList(Long.valueOf(SecurityUtil.getCurrentUserId())));
 	}
 	
 	@DeleteMapping("/delete/{id}")

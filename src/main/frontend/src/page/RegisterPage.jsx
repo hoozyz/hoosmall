@@ -21,20 +21,15 @@ function RegisterPage() {
   // "영어 대소문자, 숫자를 조합하여 8~16자리를 입력해주세요.";
   // "비밀번호가 일치하지 않습니다.";
 
-  const emailRegEx = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i
-  const passwordRegEx = /^(?=.*[a-zA-Z])(?=.*[0-9]).{8,16}$/ // 영어 대소문자, 숫자를 혼합하여 8~16글자
+  const emailRegEx = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i;
+  const passwordRegEx = /^(?=.*[a-zA-Z])(?=.*[0-9]).{8,16}$/; // 영어 대소문자, 숫자를 혼합하여 8~16글자
 
-  const emailDuplicate = async (email) => {
-    // 중복체크
-    const res = await axios.post("/register/duplicate/" + { email });
-    const check = res.data;
-
-    return check === 1 ? true : false; // 중복아니면 1이어서 트루
-  };
-
-  const emailCheck = (email) => {
+  const emailCheck = async (email) => {
     if (emailRegEx.test(email)) {
-      if (emailDuplicate(email)) {
+      const res = await axios.get("/user/register/duplicate/" + email);
+      const check = res.data;
+
+      if (check === 0) {
         // 중복이 아닐 때
         setEmail(email);
         setIsEmail(true);
@@ -81,22 +76,20 @@ function RegisterPage() {
     if (isValid) {
       // 유효성 검사를 다 통과했을 때
       console.log(isValid);
-      const res = await axios.post(
-        "/register",
-        {
+      const res = await axios
+        .post("/user/register", {
           email: email, // 서버로 보낼 데이터
           pwd: pwd,
-        }
-          .then((res) => {
-            window("회원가입에 성공하였습니다.");
+        })
+        .then((res) => {
+          alert("회원가입에 성공하였습니다.");
 
-            // 홈페이지로 이동
-            navigate("/");
-          })
-          .catch((error) => {
-            window.alert("회원가입에 실패하였습니다.");
-          })
-      );
+          // 홈페이지로 이동
+          window.location.replace("/");
+        })
+        .catch((error) => {
+          alert("회원가입에 실패하였습니다. 에러 메시지: " + error);
+        });
     } else {
       return false;
     }

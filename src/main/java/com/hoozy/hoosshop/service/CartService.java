@@ -12,6 +12,7 @@ import com.hoozy.hoosshop.entity.Cart;
 import com.hoozy.hoosshop.entity.Img;
 import com.hoozy.hoosshop.entity.Product;
 import com.hoozy.hoosshop.entity.Users;
+import com.hoozy.hoosshop.jwt.SecurityUtil;
 import com.hoozy.hoosshop.repository.CartRepository;
 
 import jakarta.transaction.Transactional;
@@ -26,7 +27,7 @@ public class CartService {
 	@Transactional
 	public Cart save(Long id) {
 		Users user = Users.builder()
-				.id(Long.valueOf(1))
+				.id(Long.valueOf(SecurityUtil.getCurrentUserId()))
 				.build();
 		
 		Img img = Img.builder()

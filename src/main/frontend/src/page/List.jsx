@@ -21,7 +21,7 @@ const List = ({ list, idx }) => {
     if(!cancel) { // 취소하지 않았을 때
       if(window.confirm("정말 삭제하시겠습니까?")) {
         await axios
-        .post("/pay/cancel", {
+        .put("/pay/cancel", {
           id: id,
           impUid: impUid,
           merchatnUid: merchatnUid,

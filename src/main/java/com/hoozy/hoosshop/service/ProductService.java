@@ -6,6 +6,8 @@ import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
+import com.hoozy.hoosshop.config.CustomException;
+import com.hoozy.hoosshop.config.ErrorCode;
 import com.hoozy.hoosshop.dto.PageInfo;
 import com.hoozy.hoosshop.dto.ProductListResponseDTO;
 import com.hoozy.hoosshop.entity.Product;
@@ -39,7 +41,7 @@ public class ProductService {
 			// 복합키 생성
 			ProductID key = new ProductID(Long.valueOf(i), Long.valueOf(i)); 
 			list.add(ProductListResponseDTO.toProductResponse(productRepository.findById(key)
-					.orElseThrow(() -> new RuntimeException("데이터가 없습니다."))));
+					.orElseThrow(() -> new CustomException(ErrorCode.RESOURCE_NOT_FOUND))));
 		}
 		
 		return list;
@@ -50,21 +52,21 @@ public class ProductService {
 		ProductID key = ProductID.toProductID(pId);
 		
 		return ProductListResponseDTO.toProductResponse(productRepository.findById(key)
-					.orElseThrow(() -> new RuntimeException("데이터가 없습니다.")));
+					.orElseThrow(() -> new CustomException(ErrorCode.RESOURCE_NOT_FOUND)));
 	}
 
 	@Transactional
 	public Product findById(Long pId) {
 		ProductID key = ProductID.toProductID(pId);
 		return productRepository.findById(key)
-				.orElseThrow(() -> new RuntimeException("DB 정보가 없습니다."));
+				.orElseThrow(() -> new CustomException(ErrorCode.RESOURCE_NOT_FOUND));
 	}
 
 	@Transactional
 	public void changeStock(Long id, int count) {
 		ProductID key = ProductID.toProductID(id);
 		Product product = productRepository.findById(key)
-				.orElseThrow(() -> new RuntimeException("DB 조회에 실패하였습니다."));
+				.orElseThrow(() -> new CustomException(ErrorCode.RESOURCE_NOT_FOUND));
 		product.setStock(product.getStock() - count); // 재고에서 구매한 개수만큼 빼기
 		save(product);
 	}
