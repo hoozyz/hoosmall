@@ -1,4 +1,4 @@
-import React, { useState, useEffect, Fragment } from "react";
+import React, { useState, useEffect, Fragment, useRef } from "react";
 import uuid from "react-uuid";
 import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
@@ -16,8 +16,9 @@ function DetailPage() {
   const [coupon, setCoupon] = useState(0);
   const [isCoupon, setIsCoupon] = useState(false);
   const [isEvent, setIsEvent] = useState(false);
-  const token = JSON.parse(localStorage.getItem("token"));
-  console.log(token)
+
+  const childRef = useRef();
+  let token = JSON.parse(localStorage.getItem("token"));
 
   const couponDrop = () => {
     if (coupon) {
@@ -49,10 +50,23 @@ function DetailPage() {
       return false;
     }
 
-    const res = await axios.post(`/cart/save/${pId}`);
-    const data = res.data;
-    if (data.code) alert(data.message);
-    else window.location.replace("/cart");
+    childRef.current.checkExpire(); // 로그인 헤더의 토큰 만료 체크 함수
+
+    await axios
+      .post(`/cart/save/${pId}`, {
+        headers: {
+          Authorization: "Bearer " + token.accessToken,
+        },
+      })
+      .then((res) => {
+        console.log(res);
+        const data = res.data;
+        if (data.message) alert(data.message);
+        else window.location.replace("/cart");
+      })
+      .catch((error) => {
+        alert(error);
+      });
   };
 
   // 결제
@@ -61,6 +75,9 @@ function DetailPage() {
       alert("결제는 회원만 가능합니다.");
       return false;
     }
+
+    childRef.current.checkExpire();
+
     let email = "";
     await axios
       .get(`/user/me`, {
@@ -80,6 +97,8 @@ function DetailPage() {
 
     let now = new Date().getTime() + uuid();
 
+    childRef.current.checkExpire();
+
     // 사전 검증요청 -> 바로 아래에 requestpay에서 실제로 요청할 때 사전요청과 맞나 확인하기 위해
     await axios
       .post(
@@ -95,30 +114,15 @@ function DetailPage() {
         }
       )
       .then(async (res) => {
-        const data = JSON.stringify(res.data);
+        const data = JSON.parse(JSON.stringify(res.data));
         console.log(data);
-        if (data.message !== null) { // 에러가 생겼을 때
-          if (data.code === "J003") {
-            // 토큰 만료
-            const refresh = await axios
-              .post("/user/refresh", {
-                accessToken: token.accessToken,
-                refreshToken: token.refreshToken,
-              })
-              .then((res) => {
-                console.log(res.data);
-                localStorage.setItem("token", JSON.stringify(res.data));
-                token = JSON.parse(JSON.stringify(res.data)); // 새로 발급받은 토큰 저장
-              })
-              .error((error) => {
-                alert(error);
-                return false;
-              });
-          } else {
-            alert(data.message);
-            window.location.reload();
-            return false;
-          }
+        if (data.message != null) {
+          // 에러가 생겼을 때
+          alert(
+            "에러가 생겼습니다. 다시 결제해주세요. 에러메시지 : " + data.message
+          );
+          window.location.reload();
+          return false;
         }
         IMP.request_pay(
           {
@@ -131,10 +135,12 @@ function DetailPage() {
             buyer_email: email,
           },
           async (res) => {
-            console.log(res);
             // PG 사에서 응답
-            if (!res.error_msg) { // 에러메시지가 없을 때 결제 완료
-              console.log(pId);
+            if (!res.error_msg) {
+              // 에러메시지가 없을 때 결제 완료
+
+              childRef.current.checkExpire();
+
               await axios
                 .post(
                   "/pay/validate",
@@ -158,7 +164,6 @@ function DetailPage() {
                   }
                 )
                 .then((res) => {
-                  console.log(res);
                   const resultData = res.data;
                   if (resultData.failMassage) {
                     navigate("/pay/fail/", {
@@ -221,7 +226,11 @@ function DetailPage() {
   return (
     <Fragment>
       <div className="page">
-        {token === null ? <LogoutHeader /> : <LoginHeader />}
+        {token === null ? (
+          <LogoutHeader />
+        ) : (
+          <LoginHeader token={token} ref={childRef} />
+        )}
         <main>
           <div className="detailBox">
             <div

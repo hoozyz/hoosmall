@@ -1,6 +1,5 @@
 package com.hoozy.hoosshop.controller;
 
-import java.util.HashMap;
 import java.util.Map;
 
 import org.springframework.http.ResponseEntity;
@@ -28,7 +27,6 @@ public class CartController {
 	
 	@PostMapping("/save/{id}") // 장바구니에 넣기
 	public ResponseEntity<Cart> save(@PathVariable Long id) {
-		Map<String, Object> map = new HashMap<>();
 		if(cartService.count() == 6) {
 			throw new CustomException(ErrorCode.CART_EXISTS_SIX);
 		} else if (cartService.isExist(id)) { 

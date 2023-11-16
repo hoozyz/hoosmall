@@ -43,7 +43,7 @@ function LoginPage() {
 
   const submit = async () => {
     if (isValid) {
-      const res = await axios
+      await axios
         .post("/user/login", {
           email: email,
           pwd: pwd,
@@ -60,6 +60,23 @@ function LoginPage() {
     } else {
       return false;
     }
+  };
+
+  const test = async () => {
+    await axios
+    .post("/user/login", {
+      email: "test@test.com",
+      pwd: "qwer1234",
+    })
+    .then((res) => {
+      window.alert("로그인에 성공하였습니다.");
+
+      localStorage.setItem("token", JSON.stringify(res.data));
+      window.location.replace("/");
+    })
+    .catch((error) => {
+      window.alert("로그인에 실패하였습니다. 에러 메시지 : " + error);
+    });
   };
 
   return (
@@ -93,6 +110,12 @@ function LoginPage() {
             onClick={isValid ? () => submit() : undefined}
           >
             로그인
+          </button>
+          <button
+            className={"miniButton"}
+            onClick={() => test()}
+          >
+            테스트 계정 로그인
           </button>
         </div>
       </div>

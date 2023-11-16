@@ -1,7 +1,5 @@
 package com.hoozy.hoosshop.dto;
 
-import com.hoozy.hoosshop.config.ErrorCode;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -16,5 +14,4 @@ public class TokenDTO { // 토큰 값을 헤더에서 가져오거나 삽입할 
 	private String accessToken; // 액세스 토큰
 	private String refreshToken; // 리프레시 토큰
 	private Long tokenExpire; // 토큰 만료 시간
-	private ErrorCode errorCode; // jwt관련 에러 메시지
 }

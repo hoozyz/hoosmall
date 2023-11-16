@@ -2,7 +2,6 @@ package com.hoozy.hoosshop.service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
@@ -10,8 +9,10 @@ import com.hoozy.hoosshop.config.CustomException;
 import com.hoozy.hoosshop.config.ErrorCode;
 import com.hoozy.hoosshop.dto.PageInfo;
 import com.hoozy.hoosshop.dto.ProductListResponseDTO;
+import com.hoozy.hoosshop.entity.Auth;
 import com.hoozy.hoosshop.entity.Product;
 import com.hoozy.hoosshop.entity.ProductID;
+import com.hoozy.hoosshop.entity.Users;
 import com.hoozy.hoosshop.repository.ProductRepository;
 
 import jakarta.transaction.Transactional;
@@ -69,5 +70,13 @@ public class ProductService {
 				.orElseThrow(() -> new CustomException(ErrorCode.RESOURCE_NOT_FOUND));
 		product.setStock(product.getStock() - count); // 재고에서 구매한 개수만큼 빼기
 		save(product);
+	}
+
+	public void resetStock() {
+		List<Product> productList = productRepository.findAll(); // 상품 전체 리스트 가져오기
+		for(Product pro : productList) {
+			pro.setStock(30); // 매주 월요일마다 상품 개수 30개로 초기화
+			productRepository.save(pro);
+		}
 	}
 }

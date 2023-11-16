@@ -3,7 +3,7 @@ import classNames from "classnames";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
-const List = ({ list, idx }) => {
+const List = ({ list, idx, token, checkExpire }) => {
   const navigate = useNavigate();
   const {
     id,
@@ -20,15 +20,28 @@ const List = ({ list, idx }) => {
   const payCancel = async () => {
     if(!cancel) { // 취소하지 않았을 때
       if(window.confirm("정말 삭제하시겠습니까?")) {
+        checkExpire(); // 만료여부 확인
+
         await axios
         .put("/pay/cancel", {
           id: id,
           impUid: impUid,
           merchatnUid: merchatnUid,
           amount: price,
+        }, {
+          headers: {
+            Authorization: "Bearer " + token.accessToken,
+          }
         })
         .then((res) => {
           const data = res.data;
+
+          if(data.message) {
+            alert("토큰에 에러가 생겼습니다. 다시 로그인해주세요. 에러 메시지 : " + data.message);
+            localStorage.removeItem("token");
+            window.location.replace("/");
+            return false;
+          }
           navigate("/pay/cancel", {
             state: data,
           });

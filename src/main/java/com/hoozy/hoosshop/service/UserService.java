@@ -1,5 +1,7 @@
 package com.hoozy.hoosshop.service;
 
+import java.util.List;
+
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
@@ -12,6 +14,7 @@ import com.hoozy.hoosshop.dto.TokenDTO;
 import com.hoozy.hoosshop.dto.TokenRequestDTO;
 import com.hoozy.hoosshop.dto.UserRequestDTO;
 import com.hoozy.hoosshop.dto.UserResponseDTO;
+import com.hoozy.hoosshop.entity.Auth;
 import com.hoozy.hoosshop.entity.RefreshToken;
 import com.hoozy.hoosshop.entity.Users;
 import com.hoozy.hoosshop.jwt.TokenProvider;
@@ -20,7 +23,6 @@ import com.hoozy.hoosshop.repository.UserRepository;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.log4j.Log4j2;
 
 @Service
 @RequiredArgsConstructor
@@ -58,6 +60,8 @@ public class UserService {
 		}
 		
 		Users user = userRequestDTO.toUser(passwordEncoder); // 비밀번호 암호화
+		user.setCouponCount(3); // 쿠폰 개수 3개 기본 제공
+		
 		// JPA는 간단한 CRUD는 메소드로 자동으로 처리해준다.
 		return UserResponseDTO.toRequest(userRepository.save(user)); 
 		// save 메소드는 리턴값이 있는 메소드로, 새로운 엔티티면 persist(새로 저장), 이미 있는거면 merge(병합)한다.
@@ -121,5 +125,17 @@ public class UserService {
 			return true;
 		}
 		return false; 
+	}
+
+	public void resetCoupon() {
+		List<Users> userList = userRepository.findAll(); // 유저 전체 리스트 가져오기
+		for(Users user : userList) {
+			if(user.getAuth() == Auth.ROLE_TEST) { // 테스트는 매일 쿠폰 10개
+				user.setCouponCount(10);
+			} else { // 테스트 계정을 제외한 일반 계정은 3개
+				user.setCouponCount(3);
+			}
+			userRepository.save(user);
+		}
 	}
 }

@@ -11,8 +11,8 @@ function HomePage() {
   const [pageInfo, setPageInfo] = useState([]);
   const [products, setProducts] = useState([]);
   const [pages, setPages] = useState([]);
-  const token = localStorage.getItem("token");
-  
+  let token = JSON.parse(localStorage.getItem("token"));
+
   const goToPage = (page) => {
     setCurrentPage(page);
   };
