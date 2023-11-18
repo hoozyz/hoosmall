@@ -33,6 +33,11 @@ public class UserController {
 		log.info("유저 쿠폰 초기화");
 		userService.resetCoupon();
 	}
+	
+	@GetMapping("/coupon")
+	public ResponseEntity<Integer> getCoupon() {
+		return ResponseEntity.ok(userService.getCoupon(SecurityUtil.getCurrentUserId()));
+	}
 
 	@GetMapping("/me") // 로그인 한 유저의 이메일 가져오기
 	public ResponseEntity<UserResponseDTO> findById() {

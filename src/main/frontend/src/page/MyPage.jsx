@@ -5,19 +5,19 @@ import "./HomePage.css";
 import List from "./List";
 import LoginHeader from "./LoginHeader";
 import Footer from "./Footer";
+import Pagination from "./Pagination";
 
 function MyPage() {
   const [currentPage, setCurrentPage] = useState(1);
   const [pageInfo, setPageInfo] = useState([]);
   const [lists, setLists] = useState([]);
-  const [pages, setPages] = useState([]);
 
   const childRef = useRef();
   let token = JSON.parse(localStorage.getItem("token"));
 
   const checkExpire = () => {
     childRef.current.checkExpire();
-  }
+  };
 
   const getProduct = async () => {
     checkExpire();
@@ -36,32 +36,11 @@ function MyPage() {
         } else {
           setLists(data.list); // 응답 중에서 상품들 리스트
           setPageInfo(data.pageInfo); // 응답 중 페이지에 대한 정보
-          console.log(data.pageInfo);
-          const pageArr = [];
-          // 현재 페이지의 시작페이지부터 마지막 페이지 까지 페이지 번호 넣기
-          for (
-            let i = data.pageInfo.startPage;
-            i <= data.pageInfo.lastPage;
-            i++
-          ) {
-            pageArr.push(i);
-          }
-          setPages(pageArr);
         }
       })
       .catch((error) => {
         alert(error);
       });
-    // const data = res.data;
-    // setLists(data.list); // 응답 중에서 상품들 리스트
-    // setPageInfo(data.pageInfo); // 응답 중 페이지에 대한 정보
-    // console.log(data.pageInfo);
-    // const pageArr = [];
-    // // 현재 페이지의 시작페이지부터 마지막 페이지 까지 페이지 번호 넣기
-    // for (let i = data.pageInfo.startPage; i <= data.pageInfo.lastPage; i++) {
-    //   pageArr.push(i);
-    // }
-    // setPages(pageArr);
   };
 
   useEffect(() => {
@@ -81,47 +60,23 @@ function MyPage() {
         </div>
         <div className="mainContainer">
           {lists.map((list, idx) => (
-            <List key={list.id} list={list} idx={idx} token={token} checkExpire={checkExpire} />
+            <List
+              key={list.id}
+              list={list}
+              idx={idx}
+              token={token}
+              checkExpire={checkExpire}
+            />
           ))}
         </div>
 
-        <div className="pagination">
-          {currentPage !== 1 && (
-            <>
-              <button
-                className="firstPage"
-                onClick={() => goToPage(1)}
-              ></button>
-              <button
-                className="prevPage"
-                onClick={() => goToPage(currentPage - 1)}
-              ></button>
-            </>
-          )}
-
-          {pages.map((page) => (
-            <button
-              key={page}
-              onClick={() => goToPage(page)}
-              className={currentPage === page ? "pageActive" : "pageBtn"}
-            >
-              {page}
-            </button>
-          ))}
-
-          {currentPage !== pageInfo.maxPage && (
-            <>
-              <button
-                className="nextPage"
-                onClick={() => goToPage(currentPage + 1)}
-              ></button>
-              <button
-                className="lastPage"
-                onClick={() => goToPage(pageInfo.maxPage)}
-              ></button>
-            </>
-          )}
-        </div>
+        <Pagination
+          currentPage={currentPage}
+          start={pageInfo.startPage}
+          end={pageInfo.endPage}
+          max={pageInfo.maxPage}
+          goToPage={goToPage}
+        />
       </main>
       <Footer />
     </div>

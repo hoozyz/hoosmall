@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import "./HomePage.css";
 import { useNavigate } from "react-router-dom";
@@ -16,8 +16,10 @@ function MyCart() {
   const [title, setTitle] = useState("");
   const [idCoupon, setIdCoupon] = useState([]);
   const [isEvent, setIsEvent] = useState(false);
+
+  const childRef = useRef();
   let token = JSON.parse(localStorage.getItem("token"));
-  
+
   const changeCoupon = (coupon) => {
     setCoupon(coupon);
   };
@@ -39,7 +41,7 @@ function MyCart() {
     // 결제할 때 필요한 자식 컴포넌트 각각의 정보(pId, count, coupon)
     idCoupon[idx] = {
       pId: idCoupon[idx].pId,
-      count: info.count, 
+      count: info.count,
       coupon: info.coupon,
     };
     setIdCoupon(idCoupon);
@@ -52,50 +54,24 @@ function MyCart() {
       // 총금액이 0원이 아닐 때
       var IMP = window.IMP;
       IMP.init("imp33422434");
-     
+
       let now = new Date().getTime() + uuid();
 
-      if (token !== null && token.tokenExpire < now) {
-        // 토큰 만료 -> 토큰 새로 발급받기
-        await axios
-          .post(
-            "/user/refresh",
-            {
-              accessToken: token.accessToken,
-              refreshToken: token.refreshToken,
-            },
-            {
-              headers: {
-                Authorization: "Bearer " + token.refreshToken,
-              },
-            }
-          )
-          .then((res) => {
-            const data = JSON.parse(JSON.stringify(res.data));
-            if (data.message) {
-              // refresh token 도 만료 -> 재로그인
-              alert("refresh token이 만료되었습니다. 다시 로그인 해주세요.");
-              localStorage.removeItem("token");
-              window.location.replace("/");
-            } else {
-              localStorage.setItem("token", JSON.stringify(res.data));
-              token = data; // 새로 발급받은 토큰 저장
-            }
-          })
-          .catch((error) => {
-            alert(error);
-          });
-      }
+      childRef.current.checkExpire();
 
       await axios
-        .post("/pay/preorder", {
-          merchantUid: now,
-          amount: isEvent ? Math.ceil(totalPrice * 0.7) : totalPrice,
-        }, {
-          headers: {
-            Authorization: "Bearer " + token.accessToken,
+        .post(
+          "/pay/preorder",
+          {
+            merchantUid: now,
+            amount: isEvent ? Math.ceil(totalPrice * 0.7) : totalPrice,
           },
-        })
+          {
+            headers: {
+              Authorization: "Bearer " + token.accessToken,
+            },
+          }
+        )
         .then((res) => {
           IMP.request_pay(
             {
@@ -108,58 +84,35 @@ function MyCart() {
               buyer_email: "test@test.com", // 회원 이메일
             },
             async (res) => {
-
               // PG 사에서 응답
               if (!res.error_msg) {
-
-                if (token !== null && token.tokenExpire < now) {
-                  // 토큰 만료 -> 토큰 새로 발급받기
-                  await axios
-                    .post(
-                      "/user/refresh",
-                      {
-                        accessToken: token.accessToken,
-                        refreshToken: token.refreshToken,
-                      },
-                      {
-                        headers: {
-                          Authorization: "Bearer " + token.refreshToken,
-                        },
-                      }
-                    )
-                    .then((res) => {
-                      const data = JSON.parse(JSON.stringify(res.data));
-                      if (data.message) {
-                        // refresh token 도 만료 -> 재로그인
-                        alert("refresh token이 만료되었습니다. 다시 로그인 해주세요.");
-                        localStorage.removeItem("token");
-                        window.location.replace("/");
-                      } else {
-                        localStorage.setItem("token", JSON.stringify(res.data));
-                        token = data; // 새로 발급받은 토큰 저장
-                      }
-                    })
-                    .catch((error) => {
-                      alert(error);
-                    });
-                }
+                childRef.current.checkExpire();
 
                 await axios
-                  .post("/pay/validate", {
-                    impUid: res.imp_uid, // 결제 요청한 결제 고유 번호
-                    merchantUid: res.merchant_uid, // 결제 요청한 상품 고유 번호
-                    amount: isEvent ? Math.ceil(totalPrice * 0.7) : totalPrice, // 결제 요청한 금액
-                    idCoupon: idCoupon, // 각 상품당 상품id, 구매하는 개수, 쿠폰 사용 개수
-                  }, {
-                    headers: {
-                      Authorization: "Bearer " + token.accessToken,
+                  .post(
+                    "/pay/validate",
+                    {
+                      impUid: res.imp_uid, // 결제 요청한 결제 고유 번호
+                      merchantUid: res.merchant_uid, // 결제 요청한 상품 고유 번호
+                      amount: isEvent
+                        ? Math.ceil(totalPrice * 0.7)
+                        : totalPrice, // 결제 요청한 금액
+                      idCoupon: idCoupon, // 각 상품당 상품id, 구매하는 개수, 쿠폰 사용 개수
                     },
-                  })
+                    {
+                      headers: {
+                        Authorization: "Bearer " + token.accessToken,
+                      },
+                    }
+                  )
                   .then((res) => {
                     console.log(res);
                     const resultData = res.data;
-                    if(resultData.message) {
-                      alert("토큰에 에러가 생겼습니다. 다시 로그인해주세요."+resultData.message);
+                    if (resultData.message) {
+                      alert(
+                        "토큰에 에러가 생겼습니다. 다시 로그인해주세요." +
+                          resultData.message
+                      );
                       localStorage.removeItem("token");
                       window.location.replace("/");
                       return false;
@@ -246,7 +199,7 @@ function MyCart() {
 
   return (
     <div className="page">
-      <LoginHeader token={token} />
+      <LoginHeader token={token} ref={childRef} />
       <main>
         <div className="mypageTitle">
           {products.length != 0
@@ -268,7 +221,9 @@ function MyCart() {
             ))}
         </div>
         <div className="totalPriceBox">
-          <div className="totlePrice">총금액 : {isEvent ? Math.ceil(totalPrice * 0.7) : totalPrice}원</div>
+          <div className="totlePrice">
+            총금액 : {isEvent ? Math.ceil(totalPrice * 0.7) : totalPrice}원
+          </div>
           <button className="payBtn" onClick={() => payment()}>
             결제하기
           </button>

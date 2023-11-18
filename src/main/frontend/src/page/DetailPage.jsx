@@ -19,6 +19,7 @@ function DetailPage() {
 
   const childRef = useRef();
   let token = JSON.parse(localStorage.getItem("token"));
+  console.log(token);
 
   const couponDrop = () => {
     if (coupon) {
@@ -53,11 +54,15 @@ function DetailPage() {
     childRef.current.checkExpire(); // 로그인 헤더의 토큰 만료 체크 함수
 
     await axios
-      .post(`/cart/save/${pId}`, {
-        headers: {
-          Authorization: "Bearer " + token.accessToken,
-        },
-      })
+      .post(
+        `/cart/save/${pId}`,
+        {}, // 데이터 없음 -> post는 데이터 같이 보내야함(없어도)
+        {
+          headers: {
+            Authorization: "Bearer " + token.accessToken,
+          },
+        }
+      )
       .then((res) => {
         console.log(res);
         const data = res.data;
@@ -87,6 +92,7 @@ function DetailPage() {
       })
       .then((res) => {
         email = res.data;
+        console.log(email);
       })
       .catch((error) => {
         alert(error);
@@ -114,7 +120,7 @@ function DetailPage() {
         }
       )
       .then(async (res) => {
-        const data = JSON.parse(JSON.stringify(res.data));
+        const data = res.data;
         console.log(data);
         if (data.message != null) {
           // 에러가 생겼을 때
@@ -199,6 +205,20 @@ function DetailPage() {
       setProduct(data);
       setFirstPrice(data.price);
       setPrice(data.price);
+
+      await axios
+        .get("/user/coupon", {
+          headers: {
+            Authorization: "Bearer " + token.accessToken,
+          },
+        })
+        .then((res) => {
+          console.log(res.data);
+          setCoupon(res.data);
+        })
+        .catch((error) => {
+          alert(error);
+        });
     };
 
     getProduct();

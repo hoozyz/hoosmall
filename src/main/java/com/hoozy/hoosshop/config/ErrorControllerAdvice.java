@@ -20,6 +20,6 @@ public class ErrorControllerAdvice {
 	protected ResponseEntity<ErrorResponse> handleCustomException(CustomException e) {
 		ErrorResponse response = ErrorResponse.of(e.getErrorCode());
 		log.info("error message : " + response.getMessage());
-		return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+		return ResponseEntity.ok(response);
 	}
 }

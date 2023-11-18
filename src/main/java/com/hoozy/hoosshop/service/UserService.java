@@ -138,4 +138,8 @@ public class UserService {
 			userRepository.save(user);
 		}
 	}
+
+	public int getCoupon(Long id) {
+		return userRepository.findCouponCountById(id).getCouponCount();
+	}
 }

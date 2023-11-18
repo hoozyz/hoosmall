@@ -25,14 +25,15 @@ public class CartController {
 	
 	private final CartService cartService;
 	
-	@PostMapping("/save/{id}") // 장바구니에 넣기
-	public ResponseEntity<Cart> save(@PathVariable Long id) {
+	@PostMapping("/save/{pId}") // 장바구니에 넣기
+	public ResponseEntity<Cart> save(@PathVariable Long pId) {
+		System.out.println(pId);
 		if(cartService.count() == 6) {
 			throw new CustomException(ErrorCode.CART_EXISTS_SIX);
-		} else if (cartService.isExist(id)) { 
+		} else if (cartService.isExist(pId)) { 
 			throw new CustomException(ErrorCode.CART_EXISTS_ONE);
 		} else {
-			return ResponseEntity.ok().body(cartService.save(id));
+			return ResponseEntity.ok().body(cartService.save(pId));
 		}
 	}
 	

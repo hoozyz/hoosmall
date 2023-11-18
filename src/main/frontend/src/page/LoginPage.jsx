@@ -12,8 +12,8 @@ function LoginPage() {
   const [isEmail, setIsEmail] = useState(false);
   const [isPwd, setIsPwd] = useState(false);
 
-  const emailRegEx = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i
-  const passwordRegEx = /^(?=.*[a-zA-Z])(?=.*[0-9]).{8,16}$/
+  const emailRegEx = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i;
+  const passwordRegEx = /^(?=.*[a-zA-Z])(?=.*[0-9]).{8,16}$/;
 
   const isValid = isEmail && isPwd;
 
@@ -50,7 +50,6 @@ function LoginPage() {
         })
         .then((res) => {
           window.alert("로그인에 성공하였습니다.");
-
           localStorage.setItem("token", JSON.stringify(res.data));
           window.location.replace("/");
         })
@@ -64,19 +63,19 @@ function LoginPage() {
 
   const test = async () => {
     await axios
-    .post("/user/login", {
-      email: "test@test.com",
-      pwd: "qwer1234",
-    })
-    .then((res) => {
-      window.alert("로그인에 성공하였습니다.");
+      .post("/user/login", {
+        email: "test@test.com",
+        pwd: "qwer1234",
+      })
+      .then((res) => {
+        window.alert("로그인에 성공하였습니다.");
 
-      localStorage.setItem("token", JSON.stringify(res.data));
-      window.location.replace("/");
-    })
-    .catch((error) => {
-      window.alert("로그인에 실패하였습니다. 에러 메시지 : " + error);
-    });
+        localStorage.setItem("token", JSON.stringify(res.data));
+        window.location.replace("/");
+      })
+      .catch((error) => {
+        window.alert("로그인에 실패하였습니다. 에러 메시지 : " + error);
+      });
   };
 
   return (
@@ -111,10 +110,7 @@ function LoginPage() {
           >
             로그인
           </button>
-          <button
-            className={"miniButton"}
-            onClick={() => test()}
-          >
+          <button className={"miniButton"} onClick={() => test()}>
             테스트 계정 로그인
           </button>
         </div>

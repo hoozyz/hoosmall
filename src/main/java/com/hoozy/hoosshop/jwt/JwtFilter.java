@@ -29,7 +29,7 @@ public class JwtFilter extends OncePerRequestFilter { // oncePerRequestFilter를
 	private String resolveToken(HttpServletRequest req) {
 		// 토큰에서 Bearer 값 뺴내기
 		String bearerToken = req.getHeader(AUTHORIZATION_HEADER);
-
+		
 		// Request Header에서 토큰 정보만 빼내기
 		if (StringUtils.hasText(bearerToken) && bearerToken.startsWith(BEARER_PREFIX)) {
 			return bearerToken.substring(7); // bearer 뺴고 뒤에 토큰
