@@ -63,6 +63,7 @@ public class JwtFilter extends OncePerRequestFilter { // oncePerRequestFilter를
 			
 			String json = new ObjectMapper().writeValueAsString(ErrorResponse.of(e.getErrorCode()));
 			res.getWriter().write(json);
+			res.getWriter().flush();
 		}
 	}
 }

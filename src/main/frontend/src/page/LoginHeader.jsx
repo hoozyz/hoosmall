@@ -37,7 +37,7 @@ const LoginHeader = forwardRef((token, ref) => {
         )
         .then((res) => {
           const data = JSON.parse(JSON.stringify(res.data));
-          console.log(data);
+          
           if (data.message) {
             // refresh token 도 만료 -> 재로그인
             alert(

@@ -1,0 +1,45 @@
+{
+  "instant" : {
+    "epochSecond" : 1700388073,
+    "nanoOfSecond" : 901066200
+  },
+  "thread" : "http-nio-0.0.0.0-8080-exec-2",
+  "level" : "INFO",
+  "loggerName" : "com.hoozy.hoosshop.controller.UserController",
+  "message" : "login : eee@ddd.com",
+  "endOfBatch" : false,
+  "loggerFqcn" : "org.apache.logging.log4j.spi.AbstractLogger",
+  "threadId" : 51,
+  "threadPriority" : 5,
+  "service" : "simple"
+}
+{
+  "instant" : {
+    "epochSecond" : 1700389397,
+    "nanoOfSecond" : 961736100
+  },
+  "thread" : "http-nio-0.0.0.0-8080-exec-1",
+  "level" : "INFO",
+  "loggerName" : "com.hoozy.hoosshop.controller.UserController",
+  "message" : "login : eee@ddd.com",
+  "endOfBatch" : false,
+  "loggerFqcn" : "org.apache.logging.log4j.spi.AbstractLogger",
+  "threadId" : 50,
+  "threadPriority" : 5,
+  "service" : "simple"
+}
+{
+  "instant" : {
+    "epochSecond" : 1700389443,
+    "nanoOfSecond" : 375174600
+  },
+  "thread" : "http-nio-0.0.0.0-8080-exec-2",
+  "level" : "INFO",
+  "loggerName" : "com.hoozy.hoosshop.controller.UserController",
+  "message" : "login : eee@ddd.com",
+  "endOfBatch" : false,
+  "loggerFqcn" : "org.apache.logging.log4j.spi.AbstractLogger",
+  "threadId" : 103,
+  "threadPriority" : 5,
+  "service" : "simple"
+}

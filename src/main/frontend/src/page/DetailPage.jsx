@@ -19,7 +19,6 @@ function DetailPage() {
 
   const childRef = useRef();
   let token = JSON.parse(localStorage.getItem("token"));
-  console.log(token);
 
   const couponDrop = () => {
     if (coupon) {
@@ -64,10 +63,12 @@ function DetailPage() {
         }
       )
       .then((res) => {
-        console.log(res);
         const data = res.data;
         if (data.message) alert(data.message);
-        else window.location.replace("/cart");
+        else {
+          alert("현재 상품을 장바구니에 넣었습니다.");
+          window.location.replace("/");
+        }
       })
       .catch((error) => {
         alert(error);
@@ -92,7 +93,6 @@ function DetailPage() {
       })
       .then((res) => {
         email = res.data;
-        console.log(email);
       })
       .catch((error) => {
         alert(error);
@@ -121,7 +121,7 @@ function DetailPage() {
       )
       .then(async (res) => {
         const data = res.data;
-        console.log(data);
+
         if (data.message != null) {
           // 에러가 생겼을 때
           alert(
@@ -213,7 +213,6 @@ function DetailPage() {
           },
         })
         .then((res) => {
-          console.log(res.data);
           setCoupon(res.data);
         })
         .catch((error) => {

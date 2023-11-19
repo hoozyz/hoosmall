@@ -18,6 +18,8 @@ bin/
 !**/src/test/**/bin/
 *.yml
 .yml
+dockerfile
+.build
 
 ### IntelliJ IDEA ###
 .idea

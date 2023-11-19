@@ -9,10 +9,8 @@ import com.hoozy.hoosshop.config.CustomException;
 import com.hoozy.hoosshop.config.ErrorCode;
 import com.hoozy.hoosshop.dto.PageInfo;
 import com.hoozy.hoosshop.dto.ProductListResponseDTO;
-import com.hoozy.hoosshop.entity.Auth;
 import com.hoozy.hoosshop.entity.Product;
 import com.hoozy.hoosshop.entity.ProductID;
-import com.hoozy.hoosshop.entity.Users;
 import com.hoozy.hoosshop.repository.ProductRepository;
 
 import jakarta.transaction.Transactional;
@@ -72,6 +70,7 @@ public class ProductService {
 		save(product);
 	}
 
+	@Transactional
 	public void resetStock() {
 		List<Product> productList = productRepository.findAll(); // 상품 전체 리스트 가져오기
 		for(Product pro : productList) {

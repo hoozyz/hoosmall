@@ -6,6 +6,10 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.stereotype.Component;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.hoozy.hoosshop.config.ErrorCode;
+import com.hoozy.hoosshop.config.ErrorResponse;
+
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -19,16 +23,14 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
 	public void commence(HttpServletRequest req, HttpServletResponse res,
 			AuthenticationException authException) throws IOException, ServletException {
 		// 유효한 자격증명을 제공하지 않고 접근하여 할 때 401
-		log.error("유효한 자격 증명이 아님.");
-		res.sendError(HttpServletResponse.SC_UNAUTHORIZED);
+		log.error("권한이 없습니다.");
+		ErrorCode code = ErrorCode.AUTHENTICATION_ERROR;
+		res.setStatus(code.getStatus());
+		res.setContentType("application/json");
+		res.setCharacterEncoding("UTF-8");
 		
-//		ErrorCode code = ErrorCode.ACCESS_DENIED;
-//		res.setStatus(code.getStatus());
-//		res.setContentType("application/json");
-//		res.setCharacterEncoding("UTF-8");
-//		
-//		String json = new ObjectMapper().writeValueAsString(ErrorResponse.of(code));
-//		log.info("json : " + json);
-//		res.getWriter().write(json);
+		String json = new ObjectMapper().writeValueAsString(ErrorResponse.of(code));
+		res.getWriter().write(json);
+		res.getWriter().flush();
 	}
 }

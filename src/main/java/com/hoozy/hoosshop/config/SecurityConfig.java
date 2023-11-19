@@ -45,8 +45,8 @@ public class SecurityConfig {
 										.requestMatchers(new AntPathRequestMatcher("/user/register/**")).permitAll()
 										.requestMatchers(new AntPathRequestMatcher("/user/login")).permitAll()
 										.requestMatchers(new AntPathRequestMatcher("/product/**")).permitAll()
-//										.requestMatchers(new AntPathRequestMatcher("/user/refresh")).permitAll()
 //										.requestMatchers(new AntPathRequestMatcher("/pay/**")).permitAll()
+//										.requestMatchers(new AntPathRequestMatcher("/user/refresh")).permitAll()
 //										.requestMatchers(new AntPathRequestMatcher("/cart/**")).permitAll()
 										// 나머지는 인증 없이 접근 불가
 										.anyRequest().authenticated())
@@ -57,29 +57,6 @@ public class SecurityConfig {
 									.authenticationEntryPoint(jwtAuthenticationEntryPoint)
 									.accessDeniedHandler(jwtAccessDeniedHandler))
 				.apply(new JwtSecurityConfig(tokenProvider));
-		
-//		Spring Security 6.1 미만 버전
-		
-//		http.csrf().disable() // csrf disable
-//			// security는 기본적으로 세션을 사용하는데 세션을 사용하지 않기 위해 세션을 stateless로 설정
-//			.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-//			
-//			// exception을 handling할 때 만든 설정 클래스 추가
-//			.and()
-//			.exceptionHandling()
-//			.authenticationEntryPoint(jwtAuthenticationEntryPoint)
-//			.accessDeniedHandler(jwtAccessDeniedHandler)
-//			
-//			.and()
-//			.authorizeHttpRequests()
-//			.requestMatchers("/user/register").permitAll() // 회원가입 api
-//			.requestMatchers("/user/login").permitAll() // 로그인 api
-//			.requestMatchers("/product/*").permitAll() // 홈페이지 제품 리스트(페이징) api
-//			.anyRequest().authenticated() // 그 외 모두 인증 없이 접근 불가
-//			
-//			.and()
-//			.apply(new JwtSecurityConfig(tokenProvider));
-		
 		return http.build();	
 	}
 }

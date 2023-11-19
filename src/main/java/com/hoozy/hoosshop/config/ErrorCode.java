@@ -18,14 +18,18 @@ public enum ErrorCode {
 	USERS_NOT_FOUND(204, "C002", "로그인 유저 정보가 없습니다."),
 	DUPLICATE_USER(400, "C003", "이미 존재하는 유저입니다."),
 	
+	// HANDLER
+	AUTHENTICATION_ERROR(400, "H001", "인증에 실패하였습니다."),
+	ACCESS_ERROR(400, "H002", "접근 권한이 없습니다."),
+	
 	// PAYMENT
 	PAYMENT_NOT_FOUND(400, "P001", "존재하지 않는 결제정보입니다."),
 	PAYMENT_NOT_ACCORD(400, "P002", "금액이 일치하지 않습니다."),
 	PAYMENT_CANCEL_FAILED(400, "P003", "취소 요청에 실패하였습니다"),
 	
 	// CART
-	CART_EXISTS_SIX(400, "C001", "장바구니에 이미 6개의 상품이 있습니다."),
-	CART_EXISTS_ONE(400, "C002", "이미 장바구니에 있는 제품입니다.");
+	CART_EXISTS_SIX(400, "T001", "장바구니에 이미 6개의 상품이 있습니다."),
+	CART_EXISTS_ONE(400, "T002", "이미 장바구니에 있는 제품입니다.");
 	
 	private int status;
 	private String code;

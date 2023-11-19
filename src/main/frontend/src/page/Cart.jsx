@@ -3,7 +3,7 @@ import axios from "axios";
 import classNames from "classnames";
 import { Navigate, useNavigate } from "react-router-dom";
 
-const Cart = ({ cart, idx, setTotal, coupon, changeCoupon, setInfo }) => {
+const Cart = ({ cart, idx, setTotal, coupon, changeCoupon, setInfo, token }) => {
   const navigate = useNavigate();
   const { id, count, product } = cart;
   const [isDrop, setDrop] = useState(false); // 쿠폰 drop 여부
@@ -13,7 +13,7 @@ const Cart = ({ cart, idx, setTotal, coupon, changeCoupon, setInfo }) => {
   const [price, setPrice] = useState(product.price); // 상품 최종 구매가격
   const [stock, setStock] = useState(product.stock - count); // 현재 구매하게 되면 남는 재고
   const [firstCount, setFirstCount] = useState(product.stock - count); // 상품 최초 재고
-  const [isCouponCount, setIsCouponCount] = useState(0); // 쿠폰 사용 개수
+  const [isCouponCount, setIsCouponCount] = useState(0); // 쿠폰 사용 개수 -> 처음 1개
   const [useCoupon, setUseCoupon] = useState(0); // 쿠폰을 사용할 수 있는 수 최대 3개
   const [isEvent, setIsEvent] = useState(false);
 
@@ -60,9 +60,19 @@ const Cart = ({ cart, idx, setTotal, coupon, changeCoupon, setInfo }) => {
   };
 
   const deleteCart = async () => {
-    const res = await axios.delete(`/cart/delete/${id}`);
-
-    window.location.reload(); // 페이지 새로고침, window.location.replace("/") : 페이지 "/"로 바꾸기
+    await axios.delete(`/cart/delete/${id}`, {
+      headers: {
+        Authorization: "Bearer " + token.accessToken,
+      }
+    })
+    .then((res) => {
+      const data = res.data;
+      if(data.message) alert(data.message);
+      else window.location.reload(); // 페이지 새로고침
+    })
+    .catch((error) => {
+      alert(error);
+    });
   };
 
   useEffect(() => {

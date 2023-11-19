@@ -106,11 +106,10 @@ function MyCart() {
                     }
                   )
                   .then((res) => {
-                    console.log(res);
                     const resultData = res.data;
                     if (resultData.message) {
                       alert(
-                        "토큰에 에러가 생겼습니다. 다시 로그인해주세요." +
+                        "에러가 생겼습니다. 다시 로그인해주세요." +
                           resultData.message
                       );
                       localStorage.removeItem("token");
@@ -217,6 +216,7 @@ function MyCart() {
                 setTotal={setTotal}
                 changeCoupon={changeCoupon}
                 setInfo={setInfo}
+                token={token}
               /> // getCoupon, setTotal 메소드 자식도 사용 가능
             ))}
         </div>

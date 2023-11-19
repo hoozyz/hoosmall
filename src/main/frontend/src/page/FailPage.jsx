@@ -6,7 +6,6 @@ function FailPage() {
   const navigate = useNavigate();
   const location = useLocation(); // 데이터 json 형태로 가져오기
   const {failMassage, pId} = location.state;
-  console.log(location.state);
 
   const detailPage = () => {
     navigate("/detail/" + pId);

@@ -49,12 +49,12 @@ function LoginPage() {
           pwd: pwd,
         })
         .then((res) => {
-          window.alert("로그인에 성공하였습니다.");
+          alert("로그인에 성공하였습니다.");
           localStorage.setItem("token", JSON.stringify(res.data));
           window.location.replace("/");
         })
-        .catch((error) => {
-          window.alert("로그인에 실패하였습니다. 에러 메시지 : " + error);
+        .catch(() => {
+          alert("회원이 아니거나 정보가 틀렸습니다.");
         });
     } else {
       return false;
@@ -68,21 +68,24 @@ function LoginPage() {
         pwd: "qwer1234",
       })
       .then((res) => {
-        window.alert("로그인에 성공하였습니다.");
-
+        alert("로그인에 성공하였습니다.");
         localStorage.setItem("token", JSON.stringify(res.data));
         window.location.replace("/");
       })
-      .catch((error) => {
-        window.alert("로그인에 실패하였습니다. 에러 메시지 : " + error);
+      .catch(() => {
+        alert("회원이 아니거나 정보가 틀렸습니다.");
       });
+  };
+
+  const home = () => {
+    window.location.replace("/");
   };
 
   return (
     <div className="page">
       <div className="miniPage">
         <div className="miniHeader">
-          <button type="" className="miniHeaderVector"></button>
+          <button className="miniHeaderVector" onClick={() => home()}></button>
           <div className="miniHeaderFont">로그인</div>
         </div>
         <div className="miniBox">

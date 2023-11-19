@@ -1,0 +1,60 @@
+{
+  "instant" : {
+    "epochSecond" : 1700388074,
+    "nanoOfSecond" : 124269000
+  },
+  "thread" : "http-nio-0.0.0.0-8080-exec-2",
+  "level" : "ERROR",
+  "loggerName" : "com.hoozy.hoosshop.jwt.JwtAuthenticationEntryPoint",
+  "message" : "권한이 없습니다.",
+  "endOfBatch" : false,
+  "loggerFqcn" : "org.apache.logging.log4j.spi.AbstractLogger",
+  "threadId" : 51,
+  "threadPriority" : 5,
+  "service" : "simple"
+}
+{
+  "instant" : {
+    "epochSecond" : 1700389398,
+    "nanoOfSecond" : 185940000
+  },
+  "thread" : "http-nio-0.0.0.0-8080-exec-1",
+  "level" : "ERROR",
+  "loggerName" : "com.hoozy.hoosshop.jwt.JwtAuthenticationEntryPoint",
+  "message" : "권한이 없습니다.",
+  "endOfBatch" : false,
+  "loggerFqcn" : "org.apache.logging.log4j.spi.AbstractLogger",
+  "threadId" : 50,
+  "threadPriority" : 5,
+  "service" : "simple"
+}
+{
+  "instant" : {
+    "epochSecond" : 1700389436,
+    "nanoOfSecond" : 924992200
+  },
+  "thread" : "restartedMain",
+  "level" : "ERROR",
+  "loggerName" : "com.hoozy.hoosshop.HoosshopApplication",
+  "message" : "에러에러",
+  "endOfBatch" : false,
+  "loggerFqcn" : "org.apache.logging.log4j.spi.AbstractLogger",
+  "threadId" : 93,
+  "threadPriority" : 5,
+  "service" : "simple"
+}
+{
+  "instant" : {
+    "epochSecond" : 1700389443,
+    "nanoOfSecond" : 498287000
+  },
+  "thread" : "http-nio-0.0.0.0-8080-exec-2",
+  "level" : "ERROR",
+  "loggerName" : "com.hoozy.hoosshop.jwt.JwtAuthenticationEntryPoint",
+  "message" : "권한이 없습니다.",
+  "endOfBatch" : false,
+  "loggerFqcn" : "org.apache.logging.log4j.spi.AbstractLogger",
+  "threadId" : 103,
+  "threadPriority" : 5,
+  "service" : "simple"
+}

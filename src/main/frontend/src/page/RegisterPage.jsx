@@ -75,7 +75,6 @@ function RegisterPage() {
   const submit = async () => {
     if (isValid) {
       // 유효성 검사를 다 통과했을 때
-      console.log(isValid);
       const res = await axios
         .post("/user/register", {
           email: email, // 서버로 보낼 데이터

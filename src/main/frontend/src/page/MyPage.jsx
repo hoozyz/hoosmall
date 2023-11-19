@@ -22,7 +22,7 @@ function MyPage() {
   const getProduct = async () => {
     checkExpire();
 
-    const res = await axios
+    await axios
       .get(`/pay/mypage/${currentPage}`, {
         headers: {
           Authorization: "Bearer " + token.accessToken,

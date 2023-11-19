@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Configuration status="INFO">
+    <Properties>
+        <Property name="LOG_DATEFORMAT_PATTERN">{yyyy-MM-dd HH:mm:ss.SSS}</Property>
+        <Property name="LOG_LEVEL_PATTERN">{-%5p}{FATAL=red blink, ERROR=red, WARN=yellow bold, INFO=green, DEBUG=green bold, TRACE=blue} %style{${sys:PID}}{magenta} [%15.15t] %style{%-40.40C{1.}}{cyan} : %m%n${LOG_EXCEPTION_CONVERSION_WORD:-%wEx}</Property>
+    </Properties>
+    <Appenders>
+        <Console name="ConsoleAppender" target="SYSTEM_OUT">
+            <PatternLayout disableAnsi="false" pattern="%d${LOG_DATEFORMAT_PATTERN} %highlight${LOG_LEVEL_PATTERN}"/>
+        </Console>
+        <RollingFile name="FileAppender"
+                     fileName="logs/hoosshop.log"
+                     filePattern="logs/hoosshop-%d{yyyy-MM-dd}-%i.log">
+            <JsonLayout complete="false" compact="false" charset="UTF-8">
+                <KeyValuePair key="service" value="simple" />
+            </JsonLayout>
+            <Policies>
+                <TimeBasedTriggeringPolicy interval="1" />
+                <SizeBasedTriggeringPolicy size="10000KB" />
+            </Policies>
+            <DefaultRolloverStrategy max="20" fileIndex="min" />
+        </RollingFile>
+        <RollingFile name="FileErrorAppender"
+                     fileName="logs/hoosshop-error.log"
+                     filePattern="logs/hoosshop-error-%d{yyyy-MM-dd}-%i.log">
+            <JsonLayout complete="false" compact="false" charset="UTF-8">
+                <KeyValuePair key="service" value="simple" />
+            </JsonLayout>
+            <Policies>
+                <TimeBasedTriggeringPolicy interval="1" />
+                <SizeBasedTriggeringPolicy size="10000KB" />
+            </Policies>
+            <DefaultRolloverStrategy max="20" fileIndex="min" />
+        </RollingFile>
+    </Appenders>
+    <Loggers>
+		<!-- 전체의 INFO는 콘솔에만 저장 -->
+		<Root level="INFO" additivity="false">
+			<AppenderRef ref="ConsoleAppender"></AppenderRef>
+		</Root>
+		<!-- 컨트롤러 패키지 내는 info ~ 콘솔, 일반파일에 저장 -->
+        <Logger name="com.hoozy.hoosshop.controller" level="INFO" additivity="false">
+			<AppenderRef ref="ConsoleAppender"></AppenderRef>
+			<AppenderRef ref="FileAppender"></AppenderRef>
+		</Logger>
+		<!-- 스프링 프레임워크 전체는 error만 콘솔, 에러파일에 저장 -->
+        <Logger name="com.hoozy.hoosshop" level="ERROR" additivity="false">
+			<AppenderRef ref="ConsoleAppender"></AppenderRef>
+			<AppenderRef ref="FileErrorAppender"></AppenderRef>
+		</Logger>
+		
+		<!--<Logger name="org.springframework" level="ERROR" additivity="false">
+			<AppenderRef ref="ConsoleAppender"></AppenderRef>
+			<AppenderRef ref="FileErrorAppender"></AppenderRef>
+		</Logger>-->
+    </Loggers>
+</Configuration>

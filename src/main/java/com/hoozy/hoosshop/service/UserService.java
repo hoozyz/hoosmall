@@ -100,9 +100,9 @@ public class UserService {
 		// access token에서 member id 가져오기
 		Authentication authentication = tokenProvider.getAuthetication(tokenRequestDTO.getAccessToken());
 		
-		// DB에서 위에 member id를 기반으로 refresh token 값 가져옴 (만료기간 비교)
+		// DB에서 위에 member id를 기반으로 refresh token 값 가져옴
 		RefreshToken refreshToken = refreshTokenRepository.findById(authentication.getName())
-				// optional은 결과가 안나올 시 예외를 thorw 해야한다.
+				// optional은 결과가 안나올 시 예외를 throw 해야한다.
 				.orElseThrow(() ->  new CustomException(ErrorCode.UNKNOWN_ERROR));
 		
 		// Refresh Token 일치 검사

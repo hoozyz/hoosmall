@@ -68,13 +68,14 @@ public class PaymentController {
 	
 	@GetMapping("/mypage/{currentPage}") // security 전역에 있는 securityUtil에서 id 가져오기
 	public ResponseEntity<Map<String, Object>> getPaymentList(@PathVariable int currentPage) {
-		// 현재페이지, 페이지 당 최대 페이지수, 전체 게시글 수, 페이지 당 게시글 수 로 페이징 정보 생성
-		int paymentCount = (int) paymentService.getCount();
-		PageInfo pageInfo = new PageInfo(currentPage, 5, paymentCount, 6);
-		log.info("getEndList : " + pageInfo.getEndList());
+		Long id = Long.valueOf(SecurityUtil.getCurrentUserId());
+		
+		// 페이징 정보 생성
+		int totalCount = (int) paymentService.getCount(id);
+		PageInfo pageInfo = new PageInfo(currentPage, 5, totalCount, 6);
 		
 		Map<String, Object> map = new HashMap<>();
-		map.put("list", paymentService.getPaymentList(Long.valueOf(SecurityUtil.getCurrentUserId()), pageInfo));
+		map.put("list", paymentService.getPaymentList(id, pageInfo));
 		map.put("pageInfo", pageInfo);
 
 		return ResponseEntity.ok(map);
@@ -108,7 +109,6 @@ public class PaymentController {
 		int day = cal.get(Calendar.DAY_OF_WEEK); // 요일 변환 -> 1부터 일요일
 		boolean isEvent = false;
 		if(day == 1 || day == 6 || day == 7) isEvent = true; // 금토일 이벤트이면 30퍼 할인
-		log.info("isEvent : " + isEvent);
 
 		// 결제 단건 조회해서 얻은 실제 결제된 금액
 		int amount = 0;
@@ -132,11 +132,10 @@ public class PaymentController {
 			Product prod = productService.findById(Long.valueOf(idCoupon.getPId()));
 			int price = prod.getPrice() * idCoupon.getCount(); // 상품 원가에 개수 곱한게 세일 전 가격
 			// 이벤트면 30퍼 세일
-			if(isEvent) price = (int) Math.ceil(price * 0.7);
 			int coupon = idCoupon.getCoupon();
 			couponCount += coupon;
 			// 쿠폰 수 만큼 15퍼 세일 -> 원가 * 쿠폰 수 * 0.15 만큼 빼기
-			price = price - ((int) Math.ceil(price * coupon * 0.15));
+			price = (int) Math.ceil(price * (1 - 0.15 * coupon));
 			totalPrice += price;
 			
 			Payment payment = Payment.builder()
@@ -153,6 +152,7 @@ public class PaymentController {
 							.build();
 			paymentList.add(payment);
 		}
+		if(isEvent) totalPrice = (int) Math.ceil(totalPrice * 0.7); // 이벤트 요일이면 30퍼 할인
 		
 		log.info("totalPrice : " + totalPrice + " ,      amount : " + amount);
 		// 결제된 금액과 결제할 금액이 다르면 결제 취소

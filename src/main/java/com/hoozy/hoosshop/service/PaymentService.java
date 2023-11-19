@@ -25,33 +25,27 @@ public class PaymentService {
 	private final PayCancelRepository payCancelRepository;
 
 	// 마이페이지 결제내역
+	@Transactional
 	public List<PaymentResponseDTO> getPaymentList(Long id, PageInfo pageInfo) {
-		List<Payment> paymentList = paymentRepository.findByUserIdAndIdBetweenOrderByPaymentDateDesc(id, Long.valueOf(pageInfo.getStartList()),
-				Long.valueOf(pageInfo.getEndList()));
+		List<Payment> paymentList = paymentRepository.findByUserId(id, pageInfo.getStartList(), pageInfo.getEndList());
 		List<PaymentResponseDTO> list = new ArrayList<>();
 		
-		for(Payment pay : paymentList) {
+		for (Payment pay : paymentList) {
 			list.add(PaymentResponseDTO.toPaymentResponseDTO(pay, pay.getPrice()));
 		}
 		return list;
 	}
 
 	@Transactional
-	public long getCount() {
-		return paymentRepository.count();
+	public long getCount(Long id) {
+		return paymentRepository.countByUserId(id);
 	}
-
-	// 결제 요청한 금액 가져오기
-	
-	// DB에서 상품 id로 원가 가져와서 쿠폰 개수와 비교하기
-	
-	// 사전 검증 요청
 
 	@Transactional
 	public Payment save(Payment pay) {
 		return paymentRepository.save(pay);
 	}
-	
+
 	@Transactional
 	public Payment cancel(Long id) {
 		Payment payment = paymentRepository.findById(id)
@@ -63,7 +57,6 @@ public class PaymentService {
 	}
 
 	public Payment findById(Long id) {
-		return paymentRepository.findById(id)
-				.orElseThrow(() ->  new CustomException(ErrorCode.RESOURCE_NOT_FOUND));
+		return paymentRepository.findById(id).orElseThrow(() -> new CustomException(ErrorCode.RESOURCE_NOT_FOUND));
 	}
 }
