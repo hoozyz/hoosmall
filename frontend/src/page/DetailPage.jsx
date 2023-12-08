@@ -56,7 +56,7 @@ function DetailPage() {
 
     await axios
       .post(
-        `/cart/save/${pId}`,
+        `/api/cart/save/${pId}`,
         {}, // 데이터 없음 -> post는 데이터 같이 보내야함(없어도)
         {
           headers: {
@@ -88,7 +88,7 @@ function DetailPage() {
 
     let email = "";
     await axios
-      .get(`/user/me`, {
+      .get(`/api/user/me`, {
         headers: {
           Authorization: "Bearer " + token.accessToken,
         },
@@ -110,7 +110,7 @@ function DetailPage() {
     // 사전 검증요청 -> 바로 아래에 requestpay에서 실제로 요청할 때 사전요청과 맞나 확인하기 위해
     await axios
       .post(
-        "/pay/preorder",
+        `/api/pay/preorder`,
         {
           merchantUid: now,
           amount: isEvent ? Math.ceil(price * 0.7) : price,
@@ -124,7 +124,7 @@ function DetailPage() {
       .then(async (res) => {
         const data = res.data;
 
-        if (data.message != null) {
+        if (data.message) {
           // 에러가 생겼을 때
           alert(
             "에러가 생겼습니다. 다시 결제해주세요. 에러메시지 : " + data.message
@@ -151,7 +151,7 @@ function DetailPage() {
 
               await axios
                 .post(
-                  "/pay/validate",
+                  `/api/pay/validate`,
                   {
                     impUid: res.imp_uid, // 결제 요청한 결제 고유 번호
                     merchantUid: res.merchant_uid, // 결제 요청한 상품 고유 번호
@@ -202,7 +202,7 @@ function DetailPage() {
 
   useEffect(() => {
     const getProduct = async () => {
-      const res = await axios.get(`/product/detail/${pId}`);
+      const res = await axios.get(`/api/product/detail/${pId}`);
       const data = res.data;
       setProduct(data);
       setFirstPrice(data.price);
@@ -210,7 +210,7 @@ function DetailPage() {
 
       if(token) {
         await axios
-        .get("/user/coupon", {
+        .get(`/api/user/coupon`, {
           headers: {
             Authorization: "Bearer " + token.accessToken,
           },

@@ -1,27 +1,13 @@
-version: '3.8'
+version: '3'
 
 services:
-  database:
-    image: jaspeen/oracle-xe-11g
-    container_name: oracle11g
-    volumes:
-      - ~/docker/data:/u01/app/oracle jaspeen/oracle-xe-11g
-    ports:
-      - 1521:1521
-      
   backend:
     build:
       context: ./backend
       dockerfile: Dockerfile
     restart: always
-    environment:
-      SPRING_DATASOURCE_URL: jdbc:oracle:thin:@127.0.0.1:1521:xe
-      SPRING_DATASOURCE_USERNAME: hoosshop
-      SPRING_DATASOURCE_PASSWORD: 1234
     ports:
-      - 8080:8080
-    depends_on:
-      - database
+      - "8080:8080"
       
   frontend:
     build:
@@ -29,6 +15,6 @@ services:
       dockerfile: Dockerfile
     restart: always
     ports:
-      - 3000:3000
+      - "3000:3000"
     depends_on:
       - backend

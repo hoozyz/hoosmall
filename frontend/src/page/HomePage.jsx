@@ -19,7 +19,7 @@ function HomePage() {
 
   useEffect(() => {
     const getProduct = async () => {
-      const res = await axios.get(`/product/list/${currentPage}`);
+      const res = await axios.get(`/api/product/list/${currentPage}`);
       const data = res.data;
       setProducts(data.list); // 응답 중에서 상품들 리스트
       setPageInfo(data.pageInfo); // 응답 중 페이지에 대한 정보

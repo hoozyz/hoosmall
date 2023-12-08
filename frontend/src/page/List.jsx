@@ -12,7 +12,7 @@ const List = ({ list, idx, token, checkExpire }) => {
     price,
     paymentDate,
     impUid,
-    merchatnUid,
+    merchantUid,
     link,
     cancel,
   } = list;
@@ -25,16 +25,16 @@ const List = ({ list, idx, token, checkExpire }) => {
 
         await axios
           .put(
-            "/pay/cancel",
+            `/api/pay/cancel`,
             {
               id: id,
               impUid: impUid,
-              merchatnUid: merchatnUid,
+              merchantUid: merchantUid,
               amount: price,
             },
             {
               headers: {
-                Authorization: "Bearer " + token.accessToken,
+                Authorization: `Bearer ${token.accessToken}`,
               },
             }
           )
@@ -50,7 +50,7 @@ const List = ({ list, idx, token, checkExpire }) => {
               window.location.replace("/");
               return false;
             }
-            navigate("/pay/cancel", {
+            navigate(`/pay/cancel`, {
               state: data,
             });
           })

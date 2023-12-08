@@ -27,7 +27,7 @@ public class CategoryService {
 			return categoryRepository.save(category);
 		
 		// 카테고리가 있으면 카테고리를 DB에서 가져와 리턴
-		else return categoryRepository.findByCate(cate.getCate())
+		else return categoryRepository.findByCate(category.getCate())
 			.orElseThrow(() -> new CustomException(ErrorCode.RESOURCE_NOT_FOUND));
 	}
 }

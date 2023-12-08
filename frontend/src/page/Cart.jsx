@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import classNames from "classnames";
-import { Navigate, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const Cart = ({ cart, idx, setTotal, coupon, changeCoupon, setInfo, token }) => {
   const navigate = useNavigate();
@@ -60,7 +60,7 @@ const Cart = ({ cart, idx, setTotal, coupon, changeCoupon, setInfo, token }) => 
   };
 
   const deleteCart = async () => {
-    await axios.delete(`/cart/delete/${id}`, {
+    await axios.delete(`/api/cart/delete/${id}`, {
       headers: {
         Authorization: "Bearer " + token.accessToken,
       }

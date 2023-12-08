@@ -1,14 +1,32 @@
 server:
-  address: 0.0.0.0
+#  address: 0.0.0.0
   # 포트 번호
-  port: 8080 
+  port: 8080
   servlet:
     # 서블릿 통신 설정
     encoding:
       charset: UTF-8
       enabled: true
       force: true
+  http2:
+    enabled: true
+    
+  # 인증서
+#  ssl:
+#    enabled: false
+#    enabled-protocols: TLSv1.2
+#    ciphers: TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256,TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+#    key-alias: hoosmall
+#    key-store: hoosmall.p12
+#    key-store-password: hoo2534
+#    key-password: hoo2534
+#    trust-store: hoosmallst.p12
+#    trust-store-password: hoo2534
+#    verify-client: none
 
+#security:
+#   require-ssl: true
+   
 spring:
   devtools:
     # 정적 소스(classpath) 파일 변경 시 자동 브라우저 재실행
@@ -22,8 +40,9 @@ spring:
     serialization:
       fail-on-empty-beans: false
   datasource:
-    driver-class-name: oracle.jdbc.driver.OracleDriver
-    url: jdbc:oracle:thin:@127.0.0.1:1521:xe
+    driver-class-name: oracle.jdbc.OracleDriver
+    url: jdbc:oracle:thin:@oracle:1521:xe 
+#    url: jdbc:oracle:thin:@localhost:1521:xe
     username: hoosshop
     password: 1234
   jpa:

@@ -24,7 +24,7 @@ function RegisterPage() {
 
   const emailCheck = async (email) => {
     if (emailRegEx.test(email)) {
-      const res = await axios.get("/user/register/duplicate/" + email);
+      const res = await axios.get("/api/user/register/duplicate/" + email);
       const check = res.data;
 
       if (check === 0) {
@@ -74,7 +74,7 @@ function RegisterPage() {
     if (isValid) {
       // 유효성 검사를 다 통과했을 때
       const res = await axios
-        .post("/user/register", {
+        .post(`/api/user/register`, {
           email: email, // 서버로 보낼 데이터
           pwd: pwd,
         })

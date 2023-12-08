@@ -41,7 +41,7 @@ function LoginPage() {
   const submit = async () => {
     if (isValid) {
       await axios
-        .post("/user/login/duplicate", {
+        .post(`/api/user/login/duplicate`, {
           email: email,
           pwd: pwd,
         })
@@ -57,7 +57,7 @@ function LoginPage() {
               )
             ) {
               axios
-                .post("/user/login", {
+                .post(`/api/user/login`, {
                   email: email,
                   pwd: pwd,
                 })
@@ -76,7 +76,7 @@ function LoginPage() {
           } else {
             // 중복 로그인이 아니면 바로 로그인
             axios
-              .post("/user/login", {
+              .post(`/api/user/login`, {
                 email: email,
                 pwd: pwd,
               })
@@ -100,7 +100,7 @@ function LoginPage() {
 
   const test = async () => {
     await axios
-      .post("/user/login/duplicate", {
+      .post(`/api/user/login/duplicate`, {
         // 중복 로그인 검증
         email: "test@test.com",
         pwd: "qwer1234",
@@ -117,7 +117,7 @@ function LoginPage() {
             )
           ) {
             axios
-              .post("/user/login", {
+              .post(`/api/user/login`, {
                 email: "test@test.com",
                 pwd: "qwer1234",
               })
@@ -136,7 +136,7 @@ function LoginPage() {
         } else {
           // 중복 로그인이 아니면 바로 로그인
           axios
-            .post("/user/login", {
+            .post(`/api/user/login`, {
               email: "test@test.com",
               pwd: "qwer1234",
             })

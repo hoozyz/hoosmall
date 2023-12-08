@@ -1,4 +1,4 @@
- package com.hoozy.hoosshop.controller;
+package com.hoozy.hoosshop.controller;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -27,42 +27,44 @@ import com.hoozy.hoosshop.service.ImgService;
 import com.hoozy.hoosshop.service.ProductService;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 
+@Log4j2
 @Controller
 @RequiredArgsConstructor
 @RequestMapping("/api")
 public class ApiController {
-	
+
 	private final ProductService productService;
 	private final ImgService imgService;
 	private final CategoryService categoryService;
 
 	@GetMapping("/parsing")
 	public void parsing() {
-		String[] textArr = {"캠핑", "그래픽카드", "모니터", "생활용품"}; // 검색을 원하는 카페고리 종류
-		
-		for(String text : textArr) {
+		String[] textArr = { "캠핑", "그래픽카드", "모니터", "생활용품" }; // 검색을 원하는 카페고리 종류
+
+		for (String text : textArr) {
 			try {
 				text = URLEncoder.encode(text, "UTF-8");
 			} catch (UnsupportedEncodingException e) {
 				throw new RuntimeException("검색어 인코딩 실패", e);
 			}
-			
+
 			String body = parsing(text);
-			
+
 			// json 문자열을 jsonparser를 통해 json 객체로 바꾸는 코드
 			JsonObject jsonMain = (JsonObject) JsonParser.parseString(body);
-			
+
 			// json 객체 내의 배열값을 jsonarray 객체로 바꾸는 코드
 			JsonArray jsonItems = (JsonArray) jsonMain.get("items");
-			
-			if(jsonItems.size() > 0) {
-				for(int i = 0; i < jsonItems.size(); i++) {
+
+			if (jsonItems.size() > 0) {
+				for (int i = 0; i < jsonItems.size(); i++) {
 					JsonObject jsonItem = (JsonObject) jsonItems.get(i); // item 하나씩 가져오기
 					String cate = "";
-					for(int j = 3; j >= 1; j--) { // 카테고리 찾는 반복문
-						cate = jsonItem.get("category"+j).toString();
-						if(cate.length() == 2) { // 카테고리가 없으면("") 상위 카테고리 찾기
+					for (int j = 3; j >= 1; j--) { // 카테고리 찾는 반복문
+						cate = jsonItem.get("category" + j).toString();
+						if (cate.length() == 2) { // 카테고리가 없으면("") 상위 카테고리 찾기
 							continue;
 						} else {
 							break;
@@ -72,35 +74,27 @@ public class ApiController {
 					cate = cate.replaceAll("\"", "");
 					String title = jsonItem.get("title").toString().replaceAll("\"", "")
 							// 정규식으로 html 태그 없애기
-							.replaceAll("<[^>]*>", ""); 
-					String image = jsonItem.get("image").toString().replaceAll("\"", ""); 
+							.replaceAll("<[^>]*>", "");
+					String image = jsonItem.get("image").toString().replaceAll("\"", "");
 					int price = Integer.parseInt(jsonItem.get("lprice").toString().replaceAll("\"", ""));
-					Img img = Img.builder()
-								.link(image)
-								.build();
+					Img img = Img.builder().link(image).build();
 					
-					Category category = Category.builder()
-											.cate(cate)
-											.build();
+					Category category = Category.builder().cate(cate).build();
+					
+					Product product = Product.builder().category(categoryService.save(category))
+							.img(imgService.save(img)).price(price).title(title).stock(30) // 초기 재고 30개
+							.build();
 
-					Product product = Product.builder()
-										.category(categoryService.save(category))
-										.img(imgService.save(img))
-										.price(price)
-										.title(title)
-										.stock(30) // 초기 재고 30개
-										.build();
-					
 					productService.save(product);
 				}
 			}
 		}
 
 	}
-	
+
 	private String parsing(String query) {
-		String clientId = "89md1AA5SI29hG5tPaVa"; // 애플리케이션 클라이언트 아이디
-		String clientSecret = "0yZWZlwD_W"; // 애플리케이션 클라이언트 시크릿
+		String clientId = "89md1AA5SI29hG5tPaVa";
+		String clientSecret = "0yZWZlwD_W";
 		
 		String apiURL = "https://openapi.naver.com/v1/search/shop.json?query=" + query; // JSON 결과
 
@@ -108,13 +102,14 @@ public class ApiController {
 		requestHeaders.put("X-Naver-Client-Id", clientId);
 		requestHeaders.put("X-Naver-Client-Secret", clientSecret);
 		String responseBody = get(apiURL, requestHeaders);
-		
+
 		return responseBody;
 	}
 
 	private String get(String apiUrl, Map<String, String> requestHeaders) {
 		HttpURLConnection con = connect(apiUrl);
 		try {
+
 			con.setRequestMethod("GET");
 			for (Map.Entry<String, String> header : requestHeaders.entrySet()) {
 				con.setRequestProperty(header.getKey(), header.getValue());

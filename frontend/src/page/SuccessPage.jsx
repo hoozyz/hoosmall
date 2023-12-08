@@ -1,11 +1,10 @@
-import React, { useState, useEffect } from "react";
-import axios from "axios";
+import React from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 
 function SuccessPage() {
   const navigate = useNavigate();
   const location = useLocation(); // 데이터 json 형태로 가져오기
-  const { id, method, pId, price, productTitle, paymentDate} = location.state;
+  const { method, price, productTitle, paymentDate} = location.state;
 
   const myPage = () => {
     navigate("/mypage");

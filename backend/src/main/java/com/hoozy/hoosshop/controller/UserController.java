@@ -1,7 +1,6 @@
 package com.hoozy.hoosshop.controller;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -20,20 +19,13 @@ import com.hoozy.hoosshop.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 
-@RestController
-@RequestMapping("/user")
-@RequiredArgsConstructor
 @Log4j2
+@RestController
+@RequiredArgsConstructor
+@RequestMapping("/api/user")
 public class UserController {
 	
 	private final UserService userService;
-	
-	// 0초 0분 0시 모든일 모든월 모든요일
-	@Scheduled(cron = "0 0 0 * * *") // 매일 스케쥴러 실행 -> 매일 쿠폰 초기화
-	public void resetCoupon() {
-		log.info("유저 쿠폰 초기화");
-		userService.resetCoupon();
-	}
 	
 	@GetMapping("/coupon")
 	public ResponseEntity<Integer> getCoupon() {
@@ -91,8 +83,8 @@ public class UserController {
 	
 	// 로그아웃 시 refreshToken을 삭제("")하여 중복 로그인 체크
 	@PutMapping("/logout")
-	public void logout() {
-		userService.logout(SecurityUtil.getCurrentUserId());
+	public ResponseEntity<Integer> logout() {
+		return ResponseEntity.ok(1);
 	}
 	
 	// 로그아웃 안하고 사이트 접속 시 다른 기기에서 로그인 하였으면 (refreshToken이 다르면) 로그아웃 시키기

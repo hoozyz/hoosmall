@@ -1,0 +1,7 @@
+2023-11-25 22:30:44.712 [http-nio-0.0.0.0-8081-exec-6] [INFO] c.h.h.c.ProductController - pId : 2
+2023-11-25 22:30:45.016 [http-nio-0.0.0.0-8081-exec-7] [INFO] c.h.h.c.ProductController - pId : 2
+2023-11-25 22:30:51.299 [http-nio-0.0.0.0-8081-exec-10] [INFO] c.h.h.c.UserController - login : test@test.com
+2023-11-25 22:30:53.696 [http-nio-0.0.0.0-8081-exec-3] [INFO] c.h.h.c.ProductController - pId : 5
+2023-11-25 22:30:54.004 [http-nio-0.0.0.0-8081-exec-4] [INFO] c.h.h.c.ProductController - pId : 5
+2023-11-25 22:30:55.102 [http-nio-0.0.0.0-8081-exec-9] [INFO] c.h.h.c.UserController - /me userId : 1
+2023-11-25 22:30:55.605 [http-nio-0.0.0.0-8081-exec-1] [INFO] c.h.h.c.PaymentController - merchant_uid : 17009190551115e95e8a1-0899-13ff-fcfe-2f51aeb5f705

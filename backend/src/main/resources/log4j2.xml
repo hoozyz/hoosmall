@@ -43,7 +43,7 @@
 			<AppenderRef ref="ConsoleAppender"></AppenderRef>
 		</Root>
 		<!-- 컨트롤러 패키지 내는 info ~ 콘솔, 일반파일에 저장 -->
-        <Logger name="com.hoozy.hoosshop.controller" level="INFO" additivity="false">
+        <Logger name="com.hoozy.hoosshop" level="INFO" additivity="false">
 			<AppenderRef ref="ConsoleAppender"></AppenderRef>
 			<AppenderRef ref="FileAppender"></AppenderRef>
 		</Logger>

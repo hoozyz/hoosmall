@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 
 const Pagination = ({ currentPage, start, end, max, goToPage }) => {
   let pages = [];

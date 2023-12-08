@@ -40,16 +40,16 @@ public class SecurityConfig {
 				.sessionManagement(Configurer -> Configurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 				.authorizeHttpRequests(auth -> auth
 										// 회원가입, 로그인, 홈페이지 상품리스트, 상품 상세정보만 인증 필요 없이 접근 가능
-										.requestMatchers(new AntPathRequestMatcher("/api/**")).permitAll()
-										.requestMatchers(new AntPathRequestMatcher("/user/register")).permitAll()
-										.requestMatchers(new AntPathRequestMatcher("/user/register/**")).permitAll()
-										.requestMatchers(new AntPathRequestMatcher("/user/login")).permitAll()
-										.requestMatchers(new AntPathRequestMatcher("/user/login/**")).permitAll()
-										.requestMatchers(new AntPathRequestMatcher("/user/validate/**")).permitAll()
-										.requestMatchers(new AntPathRequestMatcher("/product/**")).permitAll()
-//										.requestMatchers(new AntPathRequestMatcher("/pay/**")).permitAll()
-//										.requestMatchers(new AntPathRequestMatcher("/user/refresh")).permitAll()
-//										.requestMatchers(new AntPathRequestMatcher("/cart/**")).permitAll()
+										.requestMatchers(new AntPathRequestMatcher("/api/parsing")).permitAll()
+										.requestMatchers(new AntPathRequestMatcher("/api/user/register")).permitAll()
+										.requestMatchers(new AntPathRequestMatcher("/api/user/register/**")).permitAll()
+										.requestMatchers(new AntPathRequestMatcher("/api/user/login")).permitAll()
+										.requestMatchers(new AntPathRequestMatcher("/api/user/login/**")).permitAll()
+										.requestMatchers(new AntPathRequestMatcher("/api/user/validate/**")).permitAll()
+										.requestMatchers(new AntPathRequestMatcher("/api/product/**")).permitAll()
+//										.requestMatchers(new AntPathRequestMatcher("/api/pay/**")).permitAll()
+//										.requestMatchers(new AntPathRequestMatcher("/api/user/refresh")).permitAll()
+//										.requestMatchers(new AntPathRequestMatcher("/api/cart/**")).permitAll()
 										// 나머지는 인증 없이 접근 불가
 										.anyRequest().authenticated())
 				// CORS 리액트 포트인 3000포트 허용

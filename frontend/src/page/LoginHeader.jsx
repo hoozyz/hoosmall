@@ -17,7 +17,7 @@ const LoginHeader = forwardRef((token, ref) => {
 
   const checkExpire = async () => {
     // refreshToken을 가지고 가서 DB의 refreshToken이랑 다르면 로그아웃 -> 중복로그인 방지
-    axios.post(`/user/validate/${token.refreshToken}`)
+    axios.post(`/api/user/validate/${token.refreshToken}`)
     .then((res) => {
       // 1이면 로그인 유지
       // 0이면 로그아웃
@@ -38,7 +38,7 @@ const LoginHeader = forwardRef((token, ref) => {
       // 토큰 만료 -> 토큰 새로 발급받기
       await axios
         .post(
-          "/user/refresh",
+          `/api/user/refresh`,
           {
             accessToken: token.accessToken,
             refreshToken: token.refreshToken,
@@ -72,14 +72,15 @@ const LoginHeader = forwardRef((token, ref) => {
         });
     }
   };
-
+// preorder, 
   const home = () => {
     window.location.replace("/");
   };
 
   const logout = async () => {
     // 로그아웃 시 DB에 있는 refreshToken을 삭제해서 중복 로그인 체크
-    await axios.put(`/user/logout`,
+    await axios.put(`/api/user/logout`,
+    {},
     {
       headers: {
         Authorization: "Bearer " + token.accessToken,
@@ -93,7 +94,7 @@ const LoginHeader = forwardRef((token, ref) => {
       window.location.replace("/");
       }
     })
-    .catch((error) => {
+    .catch(() => {
       alert("로그아웃에 실패하였습니다. 다시 로그인해주세요.");
       localStorage.clear("token"); // 토큰 삭제
       window.location.replace("/");

@@ -20,7 +20,7 @@ import lombok.extern.log4j.Log4j2;
 public class JwtAccessDeniedHandler implements AccessDeniedHandler {
 	
 	@Override
-	public void handle(HttpServletRequest requ, HttpServletResponse res,
+	public void handle(HttpServletRequest req, HttpServletResponse res,
 			AccessDeniedException accessDeniedException) throws IOException, ServletException {
 		// 필요한 권한이 없어 접근하려 할 때 403
 		ErrorCode code = ErrorCode.ACCESS_ERROR;

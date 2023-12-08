@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useRef } from "react";
-import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import "./HomePage.css";
 import List from "./List";
@@ -23,7 +22,7 @@ function MyPage() {
     checkExpire();
 
     await axios
-      .get(`/pay/mypage/${currentPage}`, {
+      .get(`/api/pay/mypage/${currentPage}`, {
         headers: {
           Authorization: "Bearer " + token.accessToken,
         },

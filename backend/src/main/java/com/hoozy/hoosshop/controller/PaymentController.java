@@ -49,7 +49,7 @@ import lombok.extern.log4j.Log4j2;
 @Log4j2
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/pay")
+@RequestMapping("/api/pay")
 public class PaymentController {
 
 	private final PaymentService paymentService;
@@ -87,6 +87,7 @@ public class PaymentController {
 		iamportClient = new IamportClient(impKey, impSecret);
 		// 클라이언트로 사전 결제 요청 -> merchant_uid, amount(bigDecimal)
 		log.info("merchant_uid : " + preOrderRequestDTO.getMerchantUid());
+		log.info("amount : " + preOrderRequestDTO.getAmount());
 		return ResponseEntity.ok(iamportClient.postPrepare(
 				new PrepareData(preOrderRequestDTO.getMerchantUid(), new BigDecimal(preOrderRequestDTO.getAmount()))));
 	}

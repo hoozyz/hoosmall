@@ -59,9 +59,23 @@ function MyCart() {
 
       childRef.current.checkExpire();
 
+      let email = "";
+      await axios
+      .get(`/api/user/me`, {
+        headers: {
+          Authorization: "Bearer " + token.accessToken,
+        },
+      })
+      .then((res) => {
+        email = res.data;
+      })
+      .catch((error) => {
+        alert(error);
+      }); // 회원의 이메일 가져오기
+
       await axios
         .post(
-          "/pay/preorder",
+          `/api/pay/preorder`,
           {
             merchantUid: now,
             amount: isEvent ? Math.ceil(totalPrice * 0.7) : totalPrice,
@@ -81,7 +95,7 @@ function MyCart() {
               pay_method: "card",
               amount: isEvent ? Math.ceil(totalPrice * 0.7) : totalPrice,
               buyer_name: "홍길동",
-              buyer_email: "test@test.com", // 회원 이메일
+              buyer_email: email, // 회원 이메일
             },
             async (res) => {
               // PG 사에서 응답
@@ -90,7 +104,7 @@ function MyCart() {
 
                 await axios
                   .post(
-                    "/pay/validate",
+                    `/api/pay/validate`,
                     {
                       impUid: res.imp_uid, // 결제 요청한 결제 고유 번호
                       merchantUid: res.merchant_uid, // 결제 요청한 상품 고유 번호
@@ -145,7 +159,7 @@ function MyCart() {
   };
 
   const getCart = async () => {
-    const res = await axios.get(`/cart/list`, {
+    const res = await axios.get(`/api/cart/list`, {
       headers: {
         Authorization: "Bearer " + token.accessToken,
       },
